@@ -1,0 +1,1001 @@
+@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600;700;800&display=swap');
+
+:root{
+    --color-primary: #ffce80;
+    --color-danger: #54baf5;
+    --color-success: #1B9C85;
+    --color-warning: #F7D060;
+    --color-white: #fff;
+    --color-info-dark: #7d8da1;
+    --color-dark: #363949;
+    --color-light: rgba(132, 139, 200, 0.18);
+    --color-dark-variant: #677483;
+    --color-background: #f6f6f9;
+
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 1.2rem;
+
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+
+    --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+.dark-mode-variables{
+    --color-background: #181a1e;
+    --color-white: #202528;
+    --color-dark: #edeffd;
+    --color-dark-variant: #a3bdcc;
+    --color-light: rgba(0, 0, 0, 0.4);
+    --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    appearance: 0;
+    border: 0;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.avatar {
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+}
+
+.string_color {
+    color: #50befd;
+}
+
+.danger{
+    color: #FB931D;
+}
+
+html{
+    font-size: 14px;
+}
+
+body{
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.88rem;
+    user-select: none;
+    overflow-x: hidden;
+    color: var(--color-dark);
+    background-color: var(--color-background);
+}
+
+a{
+    color: var(--color-dark);
+}
+
+img{
+    display: block;
+    width: 100%;
+    object-fit: cover;
+}
+
+h1{
+    font-weight: 800;
+    font-size: 1.8rem;
+}
+
+h2{
+    font-weight: 600;
+    font-size: 1.4rem;
+}
+
+h3{
+    font-weight: 500;
+    font-size: 0.87rem;
+}
+
+small{
+    font-size: 0.76rem;
+}
+
+p{
+    color: var(--color-dark-variant);
+}
+
+b{
+    color: var(--color-dark);
+}
+
+.text-muted{
+    color: var(--color-info-dark);
+}
+
+.primary{
+    color: var(--color-primary);
+}
+
+.danger{
+    color: var(--color-danger);
+}
+
+.success{
+    color: var(--color-success);
+}
+
+.warning{
+    color: var(--color-warning);
+}
+
+.container{
+    display: grid;
+    width: 96%;
+    margin: 0 auto;
+    gap: 1.8rem;
+    grid-template-columns: 12rem auto 23rem;
+}
+
+aside{
+    height: 100vh;
+}
+
+aside .toggle{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.4rem;
+}
+
+aside .toggle .logo{
+    display: flex;
+    gap: 0.5rem;
+}
+
+aside .toggle .logo img{
+    width: 2.2rem;
+    height: 2.2rem;
+}
+
+aside .toggle .close{
+    padding-right: 1rem;
+    display: none;
+}
+
+aside .sidebar{
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-white);
+    box-shadow: var(--box-shadow);
+    border-radius: 15px;
+    height: 88vh;
+    position: relative;
+    top: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+aside .sidebar:hover{
+    box-shadow: none;
+}
+
+aside .sidebar a{
+    display: flex;
+    align-items: center;
+    color: var(--color-info-dark);
+    height: 3.7rem;
+    gap: 1rem;
+    position: relative;
+    margin-left: 2rem;
+    transition: all 0.3s ease;
+}
+
+aside .sidebar a span{
+    font-size: 1.6rem;
+    transition: all 0.3s ease;
+}
+
+aside .sidebar a:last-child{
+    position: absolute;
+    bottom: 2rem;
+    width: 100%;
+}
+
+aside .sidebar a.active{
+    width: 100%;
+    /* position: absolute; */
+    color: var(--color-primary);
+    background-color: var(--color-light);
+    margin-left: 0;
+}
+
+aside .sidebar a.active::before{
+    content: '';
+    width: 6px;
+    height: 18px;
+    background-color: var(--color-primary);
+}
+
+aside .sidebar a.active span{
+    color: var(--color-primary);
+    margin-left: calc(1rem - 3px);
+}
+aside .sidebar a:hover{
+    color: var(--color-primary);
+}
+
+aside .sidebar a:hover span{
+    margin-left: 0.6rem;
+}
+
+aside .sidebar .message-count{
+    background-color: var(--color-danger);
+    padding: 2px 6px;
+    color: var(--color-white);
+    font-size: 11px;
+    border-radius: var(--border-radius-1);
+}
+
+main{
+    margin-top: 1.4rem;
+}
+
+main .porfolio{
+    /* display: grid;
+    grid-template-columns: repeat(3,1fr); */
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;   
+}
+
+main .porfolio > div{
+    background-color: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    margin-top: 1rem;
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+main .About {
+    background: var(--color-primary);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: var(--color-dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Căn giữa nội dung */
+    gap: 10px;
+}
+
+main .porfolio > div:hover{
+    box-shadow: none;
+}
+
+main .About img {
+    width: 150px; /* Điều chỉnh kích thước ảnh */
+    height: 150px;
+    border-radius: 50%; /* Bo tròn ảnh */
+    object-fit: cover; /* Cắt ảnh vừa với khung */
+    margin-top: 10px;
+}
+
+.porfolio .About >div{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    /* display: flex; */
+    flex-direction: column;
+    gap: 1.6rem;   
+}
+
+
+/* ============================
+   SHOP — product cards
+============================ */
+.product-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.4rem;
+}
+
+.product-card{
+    background-color: var(--color-white);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.product-card:hover{
+    box-shadow: none;
+    transform: translateY(-4px);
+}
+
+.product-thumb{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--border-radius-2);
+    overflow: hidden;
+    margin-bottom: 0.8rem;
+}
+
+.product-thumb img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.badge-sale{
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    background-color: var(--color-danger);
+    color: var(--color-white);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--border-radius-1);
+}
+
+.product-card h3{
+    margin-bottom: 0.3rem;
+}
+
+.product-desc{
+    font-size: 0.76rem;
+    margin-bottom: 0.8rem;
+    flex-grow: 1;
+}
+
+.price-box{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.9rem;
+}
+
+.old-price{
+    font-size: 0.74rem;
+    color: var(--color-info-dark);
+    text-decoration: line-through;
+}
+
+.new-price{
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-success);
+}
+
+.buy-btn{
+    width: 100%;
+    padding: 0.65rem 0;
+    border-radius: var(--border-radius-1);
+    background-color: var(--color-primary);
+    color: var(--color-dark);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.buy-btn:hover{
+    background-color: var(--color-dark);
+    color: var(--color-white);
+}
+
+/* ============================
+   TRADING
+============================ */
+.trading-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.4rem;
+    margin-bottom: 1.8rem;
+}
+
+.trading-card{
+    background-color: var(--color-white);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--card-padding);
+}
+
+.trading-card-head{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.8rem;
+}
+
+.trading-price{
+    text-align: right;
+}
+
+.tp-value{
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.tp-change{
+    font-size: 0.76rem;
+}
+
+.tp-change.up{ color: var(--color-success); }
+.tp-change.down{ color: #ef4444; }
+
+.trading-bottom{
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 1.4rem;
+}
+
+.trading-tutorials, .trading-quotes{
+    background-color: var(--color-white);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--card-padding);
+}
+
+.trading-tutorials h2, .trading-quotes h2{
+    margin-bottom: 1rem;
+}
+
+.tutorial-list{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.tutorial-list li{
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    cursor: pointer;
+}
+
+.tutorial-list li span{
+    color: var(--color-primary);
+    font-size: 1.6rem;
+}
+
+.tutorial-list li b{
+    display: block;
+    margin-bottom: 0.2rem;
+}
+
+.quote-card{
+    background-color: var(--color-background);
+    border-radius: var(--border-radius-2);
+    padding: 1rem;
+    margin-bottom: 0.9rem;
+    position: relative;
+}
+
+.quote-card:last-child{
+    margin-bottom: 0;
+}
+
+.quote-icon{
+    color: var(--color-primary);
+    font-size: 1.4rem;
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+.quote-card p{
+    font-style: italic;
+    color: var(--color-dark);
+}
+
+/* ============================
+   STATUS
+============================ */
+.status-hero{
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    background-color: var(--color-white);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--card-padding);
+    margin: 1rem 0 1.4rem;
+}
+
+.status-hero-img{
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.status-highlight{
+    color: var(--color-danger);
+}
+
+.status-stats{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 1.4rem;
+}
+
+.stat-box{
+    background-color: var(--color-white);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1.4rem;
+    text-align: center;
+}
+
+.stat-box span{
+    color: var(--color-primary);
+    font-size: 1.8rem;
+}
+
+.stat-box h2{
+    margin: 0.3rem 0;
+}
+
+.status-charts{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.4rem;
+}
+
+.chart-card{
+    background-color: var(--color-white);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--card-padding);
+}
+
+.chart-card h3{
+    margin-bottom: 0.8rem;
+}
+
+/* ============================
+   Shared SPA section rules
+============================ */
+.tab-content{
+    display: none;
+}
+
+.tab-content.active-section{
+    display: block;
+}
+
+@media screen and (max-width: 768px){
+    .trading-bottom{
+        grid-template-columns: 1fr;
+    }
+    .status-hero{
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* ============================
+   PROJECTS
+============================ */
+.project-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.4rem;
+}
+
+.project-card{
+    background-color: var(--color-white);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.project-card:hover{
+    box-shadow: none;
+    transform: translateY(-4px);
+}
+
+.project-thumb{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+.project-thumb img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.badge-platform{
+    position: absolute;
+    top: 0.7rem;
+    left: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--color-white);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--border-radius-1);
+}
+
+.project-body{
+    padding: var(--card-padding);
+}
+
+.project-role{
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 0.8rem;
+    margin-bottom: 0.6rem;
+}
+
+.project-desc{
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.project-tags{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.1rem;
+}
+
+.project-tags span{
+    background-color: var(--color-light);
+    color: var(--color-dark-variant);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--border-radius-1);
+}
+
+.project-links{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+}
+
+.project-link{
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--border-radius-1);
+    background-color: var(--color-background);
+    transition: all 0.25s ease;
+}
+
+.project-link span,
+.project-link i{
+    font-size: 1rem;
+    color: var(--color-primary);
+}
+
+.project-link:hover{
+    background-color: var(--color-primary);
+    color: var(--color-dark);
+}
+
+.project-link:hover span,
+.project-link:hover i{
+    color: var(--color-dark);
+}
+
+/* ============================
+   HOME — hero + info cards
+============================ */
+.home-hero{
+    display: flex;
+    align-items: center;
+    gap: 1.8rem;
+    background: linear-gradient(135deg, var(--color-white) 60%, var(--color-light));
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--card-padding);
+    margin: 1rem 0 1.4rem;
+}
+
+.home-hero-avatar{
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 3px solid var(--color-primary);
+}
+
+.home-hero-greeting{
+    font-size: 0.85rem;
+    margin-bottom: 0.2rem;
+}
+
+.home-hero-role{
+    margin: 0.4rem 0 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    min-height: 1.4em;
+}
+
+.typed-cursor{
+    display: inline-block;
+    margin-left: 2px;
+    color: var(--color-primary);
+    animation: blink 0.9s steps(1) infinite;
+}
+
+@keyframes blink{
+    50%{ opacity: 0; }
+}
+
+.home-skill-badges{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+.home-skill-badges span{
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background-color: var(--color-light);
+    color: var(--color-dark-variant);
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: 2rem;
+}
+
+.home-social-row{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.social-pill{
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background-color: var(--color-primary);
+    color: var(--color-dark);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--border-radius-1);
+    transition: all 0.25s ease;
+}
+
+.social-pill:hover{
+    background-color: var(--color-dark);
+    color: var(--color-white);
+}
+
+.home-info-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.2rem;
+}
+
+.info-card{
+    background-color: var(--color-white);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--card-padding);
+    transition: all 0.3s ease;
+}
+
+.info-card:hover{
+    box-shadow: none;
+    transform: translateY(-4px);
+}
+
+.info-card.highlight{
+    background-color: var(--color-primary);
+}
+
+.info-card.highlight p,
+.info-card.highlight h2{
+    color: var(--color-dark);
+}
+
+.info-icon{
+    color: var(--color-primary);
+    font-size: 1.6rem;
+    margin-bottom: 0.4rem;
+    display: block;
+}
+
+.info-card.highlight .info-icon{
+    color: var(--color-dark);
+}
+
+.info-card h2{
+    margin-bottom: 0.5rem;
+}
+
+.info-card p{
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+/* ============================
+   TRADING — quick knowledge
+============================ */
+.trading-knowledge{
+    background-color: var(--color-white);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--card-padding);
+    margin-bottom: 1.4rem;
+}
+
+.tk-title{
+    margin-bottom: 1rem;
+}
+
+.tk-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.tk-card{
+    background-color: var(--color-background);
+    border-radius: var(--border-radius-2);
+    padding: 1rem;
+}
+
+.tk-card span{
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    margin-bottom: 0.4rem;
+    display: block;
+}
+
+.tk-card h3{
+    margin-bottom: 0.3rem;
+}
+
+.tk-card p{
+    font-size: 0.76rem;
+    line-height: 1.5;
+}
+
+.tk-disclaimer{
+    margin-top: 1rem;
+    font-size: 0.72rem;
+    color: var(--color-info-dark);
+}
+
+/* ============================
+   RESPONSIVE / MOBILE
+============================ */
+@media screen and (max-width: 1200px){
+    .container{
+        grid-template-columns: 10rem auto;
+    }
+}
+
+@media screen and (max-width: 992px){
+    .container{
+        grid-template-columns: 1fr;
+        width: 94%;
+    }
+
+    aside{
+        height: auto;
+    }
+
+    aside .toggle{
+        margin-top: 1rem;
+    }
+
+    aside .sidebar{
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        height: auto;
+        position: static;
+        top: 0;
+        padding: 0.5rem 0.6rem;
+        gap: 0.3rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+
+    aside .sidebar a{
+        flex-direction: column;
+        justify-content: center;
+        height: auto;
+        margin-left: 0;
+        padding: 0.5rem 0.9rem;
+        gap: 0.25rem;
+        white-space: nowrap;
+        border-radius: var(--border-radius-1);
+    }
+
+    aside .sidebar a h3{
+        font-size: 0.66rem;
+    }
+
+    aside .sidebar a span{
+        font-size: 1.3rem;
+    }
+
+    aside .sidebar a.active{
+        margin-left: 0;
+    }
+
+    aside .sidebar a.active::before{
+        display: none;
+    }
+
+    aside .sidebar a.active span{
+        margin-left: 0;
+    }
+
+    aside .sidebar a:last-child{
+        position: static;
+        width: auto;
+    }
+
+    main{
+        margin-top: 1rem;
+    }
+}
+
+@media screen and (max-width: 576px){
+    html{
+        font-size: 12px;
+    }
+
+    .container{
+        width: 100%;
+        padding: 0 0.9rem;
+        gap: 1rem;
+    }
+
+    .home-hero,
+    .status-hero{
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .home-social-row,
+    .home-skill-badges{
+        justify-content: center;
+    }
+
+    .product-grid,
+    .project-grid,
+    .trading-grid,
+    .status-charts,
+    .status-stats,
+    .home-info-grid,
+    .tk-grid,
+    .trading-bottom{
+        grid-template-columns: 1fr;
+    }
+
+    main .Games,
+    main .WICD{
+        float: none !important;
+        width: 100% !important;
+        margin-bottom: 1rem;
+    }
+
+    .card-padding, .product-card, .project-card, .info-card, .chart-card, .stat-box{
+        padding: 1.2rem;
+    }
+}

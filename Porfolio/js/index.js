@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
         new Chart(document.getElementById("timeDoughnut"), {
             type: "doughnut",
             data: {
-                labels: ["Ngủ", "Xem code cũ", "Trading chart", "Game", "Nghĩ về deadline cũ"],
+                labels: ["Ngủ", "Xem code cũ", "Sports", "Game", "Nghĩ về deadline cũ"],
                 datasets: [{
                     data: [35, 10, 20, 25, 10],
                     backgroundColor: [primary, success, danger, "#8b7bd8", "#a3bdcc"],
@@ -344,7 +344,7 @@ function initGameZone(){
     });
 
     initBlackjack(() => chips, (v) => { chips = v; renderChips(); });
-    initVideoPoker(() => chips, (v) => { chips = v; renderChips(); });
+    initTexasHoldem(() => chips, (v) => { chips = v; renderChips(); });
 }
 
 /* =========================================
@@ -474,105 +474,293 @@ function initBlackjack(getChips, setChips){
 }
 
 /* =========================================
-   VIDEO POKER (Jacks or Better)
+   TEXAS HOLD'EM (heads-up vs bot)
 ========================================= */
-function initVideoPoker(getChips, setChips){
-    const cardsEl = document.getElementById("pokerCards");
-    const statusEl = document.getElementById("pokerStatus");
-    const betInput = document.getElementById("pokerBet");
-    const dealBtn = document.getElementById("pokerDeal");
-    const drawBtn = document.getElementById("pokerDraw");
+const RANK_ORDER = { "2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,"10":10,"J":11,"Q":12,"K":13,"A":14 };
+const HAND_NAMES = ["High Card","Một đôi","Hai đôi","Sám cô","Sảnh","Thùng","Cù lũ","Tứ quý","Thùng phá sảnh"];
 
-    if (!dealBtn) return;
-
-    let deck = [];
-    let hand = [];
-    let held = [false, false, false, false, false];
-    let currentBet = 0;
-    let stage = "idle"; // idle -> dealt -> idle
-
-    const RANK_ORDER = { "2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,"10":10,"J":11,"Q":12,"K":13,"A":14 };
-
-    function renderHand(){
-        cardsEl.innerHTML = "";
-        hand.forEach((c, i) => {
-            const el = cardEl(c, false, "poker-card");
-            if (held[i]) el.classList.add("held");
-            el.addEventListener("click", () => {
-                if (stage !== "dealt") return;
-                held[i] = !held[i];
-                renderHand();
-            });
-            cardsEl.appendChild(el);
-        });
-    }
-
-    function evaluateHand(cards){
-        const ranks = cards.map((c) => RANK_ORDER[c.rank]).sort((a, b) => a - b);
-        const suits = cards.map((c) => c.suit);
-        const counts = {};
-        ranks.forEach((r) => (counts[r] = (counts[r] || 0) + 1));
-        const groups = Object.values(counts).sort((a, b) => b - a);
-        const isFlush = suits.every((s) => s === suits[0]);
-        const uniqueRanks = [...new Set(ranks)];
-        let isStraight = uniqueRanks.length === 5 && (ranks[4] - ranks[0] === 4);
-        // wheel: A-2-3-4-5
-        const isWheel = JSON.stringify(uniqueRanks) === JSON.stringify([2,3,4,5,14]);
-        if (isWheel) isStraight = true;
-
-        if (isStraight && isFlush && ranks[4] === 14 && !isWheel) return { name: "Royal Flush", mult: 250 };
-        if (isStraight && isFlush) return { name: "Straight Flush", mult: 50 };
-        if (groups[0] === 4) return { name: "Tứ quý", mult: 25 };
-        if (groups[0] === 3 && groups[1] === 2) return { name: "Cù lũ", mult: 9 };
-        if (isFlush) return { name: "Thùng", mult: 6 };
-        if (isStraight) return { name: "Sảnh", mult: 4 };
-        if (groups[0] === 3) return { name: "Sám cô", mult: 3 };
-        if (groups[0] === 2 && groups[1] === 2) return { name: "Hai đôi", mult: 2 };
-        if (groups[0] === 2) {
-            const pairRank = Object.keys(counts).find((k) => counts[k] === 2);
-            if (parseInt(pairRank, 10) >= 11) return { name: "Đôi J trở lên", mult: 1 };
+function combinations(arr, k){
+    const result = [];
+    function helper(start, combo){
+        if (combo.length === k) { result.push(combo.slice()); return; }
+        for (let i = start; i < arr.length; i++) {
+            combo.push(arr[i]);
+            helper(i + 1, combo);
+            combo.pop();
         }
-        return { name: "Không trúng", mult: 0 };
+    }
+    helper(0, []);
+    return result;
+}
+
+function evaluate5(cards){
+    const ranksDesc = cards.map((c) => RANK_ORDER[c.rank]).sort((a, b) => b - a);
+    const suits = cards.map((c) => c.suit);
+    const isFlush = suits.every((s) => s === suits[0]);
+    const uniqueDesc = [...new Set(ranksDesc)];
+
+    let isStraight = false, straightHigh = 0;
+    if (uniqueDesc.length === 5) {
+        if (uniqueDesc[0] - uniqueDesc[4] === 4) { isStraight = true; straightHigh = uniqueDesc[0]; }
+        else if (JSON.stringify(uniqueDesc) === JSON.stringify([14, 5, 4, 3, 2])) { isStraight = true; straightHigh = 5; }
     }
 
-    function setControls({ deal, draw }){
-        dealBtn.disabled = !deal;
-        betInput.disabled = !deal;
-        drawBtn.disabled = !draw;
+    const counts = {};
+    ranksDesc.forEach((r) => (counts[r] = (counts[r] || 0) + 1));
+    const groups = Object.entries(counts)
+        .map(([r, c]) => ({ rank: parseInt(r, 10), count: c }))
+        .sort((a, b) => b.count - a.count || b.rank - a.rank);
+
+    if (isStraight && isFlush) return { cat: 8, tiebreak: [straightHigh] };
+    if (groups[0].count === 4) return { cat: 7, tiebreak: [groups[0].rank, groups[1].rank] };
+    if (groups[0].count === 3 && groups[1].count === 2) return { cat: 6, tiebreak: [groups[0].rank, groups[1].rank] };
+    if (isFlush) return { cat: 5, tiebreak: ranksDesc };
+    if (isStraight) return { cat: 4, tiebreak: [straightHigh] };
+    if (groups[0].count === 3) {
+        const kickers = groups.filter((g) => g.count === 1).map((g) => g.rank);
+        return { cat: 3, tiebreak: [groups[0].rank, ...kickers] };
+    }
+    if (groups[0].count === 2 && groups[1].count === 2) {
+        const kicker = groups[2].rank;
+        return { cat: 2, tiebreak: [groups[0].rank, groups[1].rank, kicker] };
+    }
+    if (groups[0].count === 2) {
+        const kickers = groups.filter((g) => g.count === 1).map((g) => g.rank);
+        return { cat: 1, tiebreak: [groups[0].rank, ...kickers] };
+    }
+    return { cat: 0, tiebreak: ranksDesc };
+}
+
+function compareScore(a, b){
+    if (a.cat !== b.cat) return a.cat - b.cat;
+    const len = Math.max(a.tiebreak.length, b.tiebreak.length);
+    for (let i = 0; i < len; i++) {
+        const x = a.tiebreak[i] || 0, y = b.tiebreak[i] || 0;
+        if (x !== y) return x - y;
+    }
+    return 0;
+}
+
+function evaluateBest(hole, community){
+    const all = [...hole, ...community];
+    if (all.length < 5) return { cat: 0, tiebreak: all.map((c) => RANK_ORDER[c.rank]).sort((a, b) => b - a) };
+    let best = null;
+    for (const combo of combinations(all, 5)) {
+        const res = evaluate5(combo);
+        if (!best || compareScore(res, best) > 0) best = res;
+    }
+    return best;
+}
+
+function preflopStrength(hole){
+    const r = hole.map((c) => RANK_ORDER[c.rank]).sort((a, b) => b - a);
+    if (r[0] === r[1]) return 3 + (r[0] / 14) * 4; // pocket pair, ~3..7
+    const suited = hole[0].suit === hole[1].suit ? 0.6 : 0;
+    const gap = r[0] - r[1];
+    const connector = gap <= 1 ? 0.6 : gap <= 3 ? 0.25 : 0;
+    return (r[0] / 14) * 3 + (r[1] / 14) * 1.2 + suited + connector; // ~0..4.8
+}
+
+function initTexasHoldem(getChips, setChips){
+    const botCardsEl = document.getElementById("botCards");
+    const communityEl = document.getElementById("communityCards");
+    const playerCardsEl = document.getElementById("playerHoldemCards");
+    const botChipsEl = document.getElementById("botChipsDisplay");
+    const potEl = document.getElementById("potDisplay");
+    const statusEl = document.getElementById("holdemStatus");
+    const anteInput = document.getElementById("holdemAnte");
+    const startBtn = document.getElementById("holdemStart");
+    const checkCallBtn = document.getElementById("holdemCheckCall");
+    const amountInput = document.getElementById("holdemAmount");
+    const betRaiseBtn = document.getElementById("holdemBetRaise");
+    const foldBtn = document.getElementById("holdemFold");
+
+    if (!startBtn) return;
+
+    let botChips = 1000;
+    let deck = [], holeP = [], holeB = [], community = [];
+    let pot = 0, streetP = 0, streetB = 0, stage = "idle";
+
+    document.getElementById("resetChips")?.addEventListener("click", () => { botChips = 1000; renderBotChips(); });
+
+    function renderBotChips(){ botChipsEl.textContent = botChips.toLocaleString(); }
+    renderBotChips();
+
+    function renderTable(revealBot){
+        botCardsEl.innerHTML = "";
+        holeB.forEach((c) => botCardsEl.appendChild(cardEl(c, !revealBot)));
+        communityEl.innerHTML = "";
+        community.forEach((c) => communityEl.appendChild(cardEl(c)));
+        playerCardsEl.innerHTML = "";
+        holeP.forEach((c) => playerCardsEl.appendChild(cardEl(c)));
+        potEl.textContent = `Pot: ${pot}`;
     }
 
-    dealBtn.addEventListener("click", () => {
-        const bet = parseInt(betInput.value, 10) || 0;
-        if (bet < 10) { statusEl.textContent = "Cược tối thiểu 10 chips."; return; }
-        if (bet > getChips()) { statusEl.textContent = "Không đủ chips!"; return; }
+    function setPreActionUI(disabled){
+        startBtn.disabled = !disabled;
+        anteInput.disabled = !disabled;
+    }
 
-        currentBet = bet;
-        setChips(getChips() - bet);
-        deck = freshDeck();
-        hand = [deck.pop(), deck.pop(), deck.pop(), deck.pop(), deck.pop()];
-        held = [false, false, false, false, false];
-        stage = "dealt";
+    function setActionUI(facingBet, need){
+        checkCallBtn.disabled = false;
+        betRaiseBtn.disabled = false;
+        amountInput.disabled = false;
+        foldBtn.disabled = false;
+        checkCallBtn.textContent = facingBet ? `Call ${need}` : "Check";
+        betRaiseBtn.textContent = facingBet ? "Raise" : "Bet";
+    }
 
-        renderHand();
-        statusEl.textContent = "Bấm vào lá muốn giữ, rồi bấm Draw.";
-        setControls({ deal: false, draw: true });
-    });
+    function disableActions(){
+        checkCallBtn.disabled = true;
+        betRaiseBtn.disabled = true;
+        amountInput.disabled = true;
+        foldBtn.disabled = true;
+    }
 
-    drawBtn.addEventListener("click", () => {
-        hand = hand.map((c, i) => (held[i] ? c : deck.pop()));
+    function endHand(winner, message){
+        if (winner === "player") setChips(getChips() + pot);
+        else if (winner === "bot") botChips += pot;
+        else { // split
+            setChips(getChips() + Math.floor(pot / 2));
+            botChips += Math.ceil(pot / 2);
+        }
+        pot = 0;
         stage = "idle";
-        renderHand();
+        renderTable(true);
+        statusEl.textContent = message;
+        disableActions();
+        setPreActionUI(true);
+        renderBotChips();
+    }
 
-        const result = evaluateHand(hand);
-        const winnings = currentBet * result.mult;
-        if (winnings > 0) {
-            setChips(getChips() + winnings);
-            statusEl.textContent = `${result.name}! Thắng +${winnings} chips 🎉`;
+    function botHandStrength(){
+        if (community.length === 0) return preflopStrength(holeB);
+        const res = evaluateBest(holeB, community);
+        return res.cat + (res.tiebreak[0] || 0) / 14;
+    }
+
+    function advanceStreet(){
+        streetP = 0; streetB = 0;
+        if (stage === "preflop") { community.push(deck.pop(), deck.pop(), deck.pop()); stage = "flop"; }
+        else if (stage === "flop") { community.push(deck.pop()); stage = "turn"; }
+        else if (stage === "turn") { community.push(deck.pop()); stage = "river"; }
+        else if (stage === "river") { return showdown(); }
+
+        renderTable(false);
+        const names = { flop: "Flop", turn: "Turn", river: "River" };
+        statusEl.textContent = `${names[stage]} — đến lượt bạn.`;
+        setActionUI(false, 0);
+    }
+
+    function showdown(){
+        stage = "showdown";
+        renderTable(true);
+        const playerScore = evaluateBest(holeP, community);
+        const botScore = evaluateBest(holeB, community);
+        const cmp = compareScore(playerScore, botScore);
+        if (cmp > 0) endHand("player", `Bạn thắng với ${HAND_NAMES[playerScore.cat]}! +${pot} chips 🎉`);
+        else if (cmp < 0) endHand("bot", `Bot thắng với ${HAND_NAMES[botScore.cat]}. Bạn mất ${pot} chips.`);
+        else endHand("split", `Hòa (${HAND_NAMES[playerScore.cat]})! Chia đôi pot.`);
+    }
+
+    function botRespondToBet(){
+        const need = streetP - streetB;
+        const strength = botHandStrength();
+        const callProb = Math.max(0.08, Math.min(0.95, 0.15 + strength * 0.13 + (Math.random() - 0.5) * 0.2));
+        setTimeout(() => {
+            if (Math.random() < callProb) {
+                const pay = Math.min(need, botChips);
+                botChips -= pay; pot += pay; streetB += pay;
+                statusEl.textContent = `Bot call ${pay}.`;
+                renderTable(false);
+                advanceStreet();
+            } else {
+                statusEl.textContent = "Bot fold!";
+                endHand("player", `Bot fold! Bạn thắng +${pot} chips 🎉`);
+            }
+        }, 500);
+    }
+
+    function botTurn(){
+        const strength = stage === "preflop" ? preflopStrength(holeB) : botHandStrength();
+        const betProb = strength > 4 ? 0.55 : strength > 2 ? 0.25 : 0.08;
+        setTimeout(() => {
+            if (Math.random() < betProb && botChips > 0) {
+                const ante = Math.max(10, parseInt(anteInput.value, 10) || 20);
+                const amount = Math.min(botChips, Math.max(ante, Math.round(pot * 0.5)));
+                botChips -= amount; pot += amount; streetB += amount;
+                statusEl.textContent = `Bot bet ${amount}.`;
+                renderTable(false);
+                setActionUI(true, streetB - streetP);
+            } else {
+                statusEl.textContent = "Bot check.";
+                advanceStreet();
+            }
+        }, 500);
+    }
+
+    function playerCheckOrCall(){
+        const need = streetB - streetP;
+        if (need > 0) {
+            const pay = Math.min(need, getChips());
+            setChips(getChips() - pay); pot += pay; streetP += pay;
+            statusEl.textContent = `Bạn call ${pay}.`;
+            renderTable(false);
+            disableActions();
+            advanceStreet();
         } else {
-            statusEl.textContent = `${result.name}. Thua ${currentBet} chips, chúc may mắn lần sau.`;
+            statusEl.textContent = "Bạn check.";
+            disableActions();
+            botTurn();
         }
-        setControls({ deal: true, draw: false });
+    }
+
+    function playerBetOrRaise(){
+        const amount = Math.max(0, parseInt(amountInput.value, 10) || 0);
+        if (amount <= 0) { statusEl.textContent = "Nhập số tiền hợp lệ."; return; }
+        const need = streetB - streetP;
+        const pay = Math.min(need + amount, getChips());
+        setChips(getChips() - pay); pot += pay; streetP += pay;
+        statusEl.textContent = `Bạn ${need > 0 ? "raise" : "bet"} (trả ${pay}).`;
+        renderTable(false);
+        disableActions();
+        botRespondToBet();
+    }
+
+    function playerFold(){
+        statusEl.textContent = "Bạn fold.";
+        disableActions();
+        endHand("bot", `Bạn fold. Bot thắng ${pot} chips.`);
+    }
+
+    startBtn.addEventListener("click", () => {
+        const ante = Math.max(10, parseInt(anteInput.value, 10) || 20);
+        if (ante > getChips() || ante > botChips) {
+            statusEl.textContent = "Ante quá lớn so với chip hiện có (của bạn hoặc bot).";
+            return;
+        }
+        setChips(getChips() - ante);
+        botChips -= ante;
+        pot = ante * 2;
+        deck = freshDeck();
+        holeP = [deck.pop(), deck.pop()];
+        holeB = [deck.pop(), deck.pop()];
+        community = [];
+        streetP = 0; streetB = 0;
+        stage = "preflop";
+
+        renderTable(false);
+        renderBotChips();
+        statusEl.textContent = "Preflop — đến lượt bạn.";
+        setPreActionUI(false);
+        setActionUI(false, 0);
+        amountInput.value = ante;
     });
 
-    setControls({ deal: true, draw: false });
+    checkCallBtn.addEventListener("click", playerCheckOrCall);
+    betRaiseBtn.addEventListener("click", playerBetOrRaise);
+    foldBtn.addEventListener("click", playerFold);
+
+    setPreActionUI(true);
+    disableActions();
 }

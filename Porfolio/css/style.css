@@ -1194,62 +1194,27 @@ main .About img {
     margin-top: 0.15rem;
 }
 
-.poker-card{
-    cursor: pointer;
-    position: relative;
-    transition: transform 0.15s ease;
-}
-
-.poker-card.held{
-    transform: translateY(-10px);
-    outline: 3px solid var(--color-primary);
-}
-
-.poker-card.held::after{
-    content: 'HOLD';
-    position: absolute;
-    bottom: -1.2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.62rem;
-    font-weight: 700;
-    color: var(--color-primary);
-    white-space: nowrap;
-}
-
-.poker-paytable{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 0.4rem 1rem;
-    background-color: var(--color-white);
-    box-shadow: var(--box-shadow);
-    border-radius: var(--border-radius-2);
-    padding: 1rem 1.2rem;
-    margin-bottom: 1.2rem;
-    font-size: 0.76rem;
-}
-
-.poker-paytable span{
-    display: flex;
-    justify-content: space-between;
-    color: var(--color-dark-variant);
-}
-
-.poker-paytable b{
-    color: var(--color-primary);
-}
-
-#pokerCards{
+.holdem-table{
     background: radial-gradient(ellipse at center, #1f6b4f 0%, #143f30 100%);
     border-radius: var(--card-border-radius);
     padding: 1.8rem;
-    justify-content: center;
-    margin-bottom: 0.6rem;
+    margin-bottom: 1.2rem;
 }
 
-.poker-hint{
-    font-size: 0.74rem;
-    margin-bottom: 0.8rem;
+.holdem-row{
+    margin-bottom: 1.4rem;
+}
+
+.holdem-row:last-child{
+    margin-bottom: 0;
+}
+
+.holdem-row h3{
+    color: var(--color-white);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .game-status{

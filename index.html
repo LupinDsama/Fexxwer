@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="Porfolio/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <title>Fexxwer Porfolio</title>
+    <link rel="icon" class="js-site-favicon" type="image/svg+xml" href="https://github.githubassets.com/favicons/favicon.svg" data-base-href="https://github.githubassets.com/favicons/favicon">
 </head>
 
 <body>
@@ -374,7 +375,7 @@
 
                 <div class="game-switch">
                     <button class="game-tab-btn active" data-game="blackjack">🃏 Blackjack</button>
-                    <button class="game-tab-btn" data-game="poker">♣️ Video Poker</button>
+                    <button class="game-tab-btn" data-game="poker">♠️ Texas Hold'em</button>
                 </div>
 
                 <!-- BLACKJACK -->
@@ -406,31 +407,36 @@
                     </div>
                 </div>
 
-                <!-- VIDEO POKER -->
+                <!-- TEXAS HOLD'EM -->
                 <div class="game-panel" id="pokerPanel">
-                    <div class="poker-paytable">
-                        <span>Royal Flush <b>250x</b></span>
-                        <span>Straight Flush <b>50x</b></span>
-                        <span>Tứ quý <b>25x</b></span>
-                        <span>Cù lũ <b>9x</b></span>
-                        <span>Thùng <b>6x</b></span>
-                        <span>Sảnh <b>4x</b></span>
-                        <span>Sám cô <b>3x</b></span>
-                        <span>2 đôi <b>2x</b></span>
-                        <span>Đôi J trở lên <b>1x</b></span>
+                    <div class="holdem-table">
+                        <div class="holdem-row">
+                            <h3>Bot <span class="score-badge" id="botChipsDisplay">1000</span></h3>
+                            <div class="card-row" id="botCards"></div>
+                        </div>
+                        <div class="holdem-row">
+                            <h3>Bàn chung <span class="score-badge" id="potDisplay">Pot: 0</span></h3>
+                            <div class="card-row" id="communityCards"></div>
+                        </div>
+                        <div class="holdem-row">
+                            <h3>Bạn</h3>
+                            <div class="card-row" id="playerHoldemCards"></div>
+                        </div>
                     </div>
 
-                    <div class="card-row" id="pokerCards"></div>
-                    <p class="poker-hint text-muted">Bấm vào lá bài để giữ (Hold) trước khi Draw.</p>
-
-                    <p class="game-status" id="pokerStatus">Đặt cược rồi bấm "Deal".</p>
+                    <p class="game-status" id="holdemStatus">Đặt ante rồi bấm "Chia bài" để bắt đầu ván mới.</p>
 
                     <div class="game-controls">
                         <div class="bet-controls">
-                            <label for="pokerBet">Cược</label>
-                            <input type="number" id="pokerBet" value="20" min="10" step="10">
-                            <button id="pokerDeal" class="game-btn primary">Deal</button>
-                            <button id="pokerDraw" class="game-btn" disabled>Draw</button>
+                            <label for="holdemAnte">Ante</label>
+                            <input type="number" id="holdemAnte" value="20" min="10" step="10">
+                            <button id="holdemStart" class="game-btn primary">Chia bài</button>
+                        </div>
+                        <div class="action-controls">
+                            <button id="holdemCheckCall" class="game-btn" disabled>Check</button>
+                            <input type="number" id="holdemAmount" value="20" min="10" step="10" disabled style="width: 84px;">
+                            <button id="holdemBetRaise" class="game-btn" disabled>Bet</button>
+                            <button id="holdemFold" class="game-btn" disabled>Fold</button>
                         </div>
                     </div>
                 </div>

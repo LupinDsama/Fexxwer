@@ -274,8 +274,305 @@ document.addEventListener("DOMContentLoaded", () => {
         tradingChartsInitialized = true;
         document.querySelectorAll(".trading-card").forEach(renderTradingCard);
     }
+    /* =========================================
+       6. GAME ZONE — chips, Blackjack, Video Poker
+    ========================================= */
+    initGameZone();
 });
 
 function toggleDiv() {
     document.getElementById("myDiv").classList.toggle("hidden");
+}
+
+/* ---------- shared deck helpers ---------- */
+const SUITS = ["♠", "♥", "♦", "♣"];
+const RANKS = ["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
+
+function freshDeck(){
+    const deck = [];
+    for (const s of SUITS) {
+        for (const r of RANKS) {
+            deck.push({ rank: r, suit: s, red: s === "♥" || s === "♦" });
+        }
+    }
+    for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+    return deck;
+}
+
+function cardEl(card, faceDown = false, extraClass = ""){
+    const el = document.createElement("div");
+    el.className = `playing-card ${extraClass} ${faceDown ? "card-back" : (card.red ? "red" : "black")}`;
+    if (!faceDown) {
+        el.innerHTML = `<span>${card.rank}</span><span class="suit-icon">${card.suit}</span>`;
+    }
+    return el;
+}
+
+/* =========================================
+   GAME ZONE bootstrap
+========================================= */
+function initGameZone(){
+    const chipEl = document.getElementById("chipBalance");
+    const resetBtn = document.getElementById("resetChips");
+    if (!chipEl) return; // section not present on this page
+
+    let chips = parseInt(localStorage.getItem("chips") || "1000", 10);
+
+    function renderChips(){
+        chipEl.textContent = chips.toLocaleString();
+        localStorage.setItem("chips", chips);
+    }
+    renderChips();
+
+    resetBtn.addEventListener("click", () => {
+        chips = 1000;
+        renderChips();
+    });
+
+    // tab switching
+    document.querySelectorAll(".game-tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".game-tab-btn").forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            document.querySelectorAll(".game-panel").forEach((p) => p.classList.remove("active-panel"));
+            const target = btn.dataset.game === "blackjack" ? "blackjackPanel" : "pokerPanel";
+            document.getElementById(target).classList.add("active-panel");
+        });
+    });
+
+    initBlackjack(() => chips, (v) => { chips = v; renderChips(); });
+    initVideoPoker(() => chips, (v) => { chips = v; renderChips(); });
+}
+
+/* =========================================
+   BLACKJACK
+========================================= */
+function initBlackjack(getChips, setChips){
+    const dealerCardsEl = document.getElementById("dealerCards");
+    const playerCardsEl = document.getElementById("playerCards");
+    const dealerScoreEl = document.getElementById("dealerScore");
+    const playerScoreEl = document.getElementById("playerScore");
+    const statusEl = document.getElementById("bjStatus");
+    const betInput = document.getElementById("bjBet");
+    const dealBtn = document.getElementById("bjDeal");
+    const hitBtn = document.getElementById("bjHit");
+    const standBtn = document.getElementById("bjStand");
+    const doubleBtn = document.getElementById("bjDouble");
+
+    if (!dealBtn) return;
+
+    let deck = [];
+    let player = [];
+    let dealer = [];
+    let currentBet = 0;
+    let roundOver = true;
+
+    function handValue(hand){
+        let total = 0, aces = 0;
+        for (const c of hand) {
+            if (c.rank === "A") { total += 11; aces++; }
+            else if (["K","Q","J"].includes(c.rank)) total += 10;
+            else total += parseInt(c.rank, 10);
+        }
+        while (total > 21 && aces > 0) { total -= 10; aces--; }
+        return total;
+    }
+
+    function renderHands(hideDealerHole){
+        dealerCardsEl.innerHTML = "";
+        dealer.forEach((c, i) => dealerCardsEl.appendChild(cardEl(c, hideDealerHole && i === 1)));
+        playerCardsEl.innerHTML = "";
+        player.forEach((c) => playerCardsEl.appendChild(cardEl(c)));
+
+        playerScoreEl.textContent = handValue(player);
+        dealerScoreEl.textContent = hideDealerHole ? "?" : handValue(dealer);
+    }
+
+    function setControls({ deal, actions }){
+        dealBtn.disabled = !deal;
+        betInput.disabled = !deal;
+        hitBtn.disabled = !actions;
+        standBtn.disabled = !actions;
+        doubleBtn.disabled = !actions || getChips() < currentBet;
+    }
+
+    function endRound(message, delta){
+        roundOver = true;
+        setChips(getChips() + delta);
+        statusEl.textContent = message;
+        renderHands(false);
+        setControls({ deal: true, actions: false });
+    }
+
+    function dealerPlay(){
+        while (handValue(dealer) < 17) dealer.push(deck.pop());
+        const p = handValue(player);
+        const d = handValue(dealer);
+
+        if (d > 21) return endRound(`Dealer quắc (${d})! Bạn thắng +${currentBet}`, currentBet * 2);
+        if (d > p) return endRound(`Dealer thắng với ${d} vs ${p}.`, 0);
+        if (d < p) return endRound(`Bạn thắng ${p} vs ${d}! +${currentBet}`, currentBet * 2);
+        return endRound(`Hòa (push) ${p} vs ${d}. Hoàn cược.`, currentBet);
+    }
+
+    dealBtn.addEventListener("click", () => {
+        const bet = parseInt(betInput.value, 10) || 0;
+        if (bet < 10) { statusEl.textContent = "Cược tối thiểu 10 chips."; return; }
+        if (bet > getChips()) { statusEl.textContent = "Không đủ chips!"; return; }
+
+        currentBet = bet;
+        setChips(getChips() - bet);
+        deck = freshDeck();
+        player = [deck.pop(), deck.pop()];
+        dealer = [deck.pop(), deck.pop()];
+        roundOver = false;
+
+        renderHands(true);
+        setControls({ deal: false, actions: true });
+
+        const p = handValue(player);
+        if (p === 21) {
+            const blackjackWin = Math.floor(currentBet * 2.5);
+            statusEl.textContent = "Blackjack! 🎉";
+            return endRound("Blackjack! Bạn thắng x2.5 cược.", blackjackWin);
+        }
+        statusEl.textContent = "Hit để rút thêm bài, hoặc Stand để dừng.";
+    });
+
+    hitBtn.addEventListener("click", () => {
+        if (roundOver) return;
+        player.push(deck.pop());
+        const p = handValue(player);
+        renderHands(true);
+        if (p > 21) endRound(`Quắc bài (${p})! Bạn thua ${currentBet}.`, 0);
+        else doubleBtn.disabled = true; // can only double on first decision
+    });
+
+    standBtn.addEventListener("click", () => {
+        if (roundOver) return;
+        setControls({ deal: false, actions: false });
+        renderHands(false);
+        dealerPlay();
+    });
+
+    doubleBtn.addEventListener("click", () => {
+        if (roundOver || getChips() < currentBet) return;
+        setChips(getChips() - currentBet);
+        currentBet *= 2;
+        player.push(deck.pop());
+        const p = handValue(player);
+        renderHands(true);
+        if (p > 21) { endRound(`Quắc bài (${p})! Bạn thua ${currentBet}.`, 0); return; }
+        setControls({ deal: false, actions: false });
+        dealerPlay();
+    });
+
+    setControls({ deal: true, actions: false });
+}
+
+/* =========================================
+   VIDEO POKER (Jacks or Better)
+========================================= */
+function initVideoPoker(getChips, setChips){
+    const cardsEl = document.getElementById("pokerCards");
+    const statusEl = document.getElementById("pokerStatus");
+    const betInput = document.getElementById("pokerBet");
+    const dealBtn = document.getElementById("pokerDeal");
+    const drawBtn = document.getElementById("pokerDraw");
+
+    if (!dealBtn) return;
+
+    let deck = [];
+    let hand = [];
+    let held = [false, false, false, false, false];
+    let currentBet = 0;
+    let stage = "idle"; // idle -> dealt -> idle
+
+    const RANK_ORDER = { "2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,"10":10,"J":11,"Q":12,"K":13,"A":14 };
+
+    function renderHand(){
+        cardsEl.innerHTML = "";
+        hand.forEach((c, i) => {
+            const el = cardEl(c, false, "poker-card");
+            if (held[i]) el.classList.add("held");
+            el.addEventListener("click", () => {
+                if (stage !== "dealt") return;
+                held[i] = !held[i];
+                renderHand();
+            });
+            cardsEl.appendChild(el);
+        });
+    }
+
+    function evaluateHand(cards){
+        const ranks = cards.map((c) => RANK_ORDER[c.rank]).sort((a, b) => a - b);
+        const suits = cards.map((c) => c.suit);
+        const counts = {};
+        ranks.forEach((r) => (counts[r] = (counts[r] || 0) + 1));
+        const groups = Object.values(counts).sort((a, b) => b - a);
+        const isFlush = suits.every((s) => s === suits[0]);
+        const uniqueRanks = [...new Set(ranks)];
+        let isStraight = uniqueRanks.length === 5 && (ranks[4] - ranks[0] === 4);
+        // wheel: A-2-3-4-5
+        const isWheel = JSON.stringify(uniqueRanks) === JSON.stringify([2,3,4,5,14]);
+        if (isWheel) isStraight = true;
+
+        if (isStraight && isFlush && ranks[4] === 14 && !isWheel) return { name: "Royal Flush", mult: 250 };
+        if (isStraight && isFlush) return { name: "Straight Flush", mult: 50 };
+        if (groups[0] === 4) return { name: "Tứ quý", mult: 25 };
+        if (groups[0] === 3 && groups[1] === 2) return { name: "Cù lũ", mult: 9 };
+        if (isFlush) return { name: "Thùng", mult: 6 };
+        if (isStraight) return { name: "Sảnh", mult: 4 };
+        if (groups[0] === 3) return { name: "Sám cô", mult: 3 };
+        if (groups[0] === 2 && groups[1] === 2) return { name: "Hai đôi", mult: 2 };
+        if (groups[0] === 2) {
+            const pairRank = Object.keys(counts).find((k) => counts[k] === 2);
+            if (parseInt(pairRank, 10) >= 11) return { name: "Đôi J trở lên", mult: 1 };
+        }
+        return { name: "Không trúng", mult: 0 };
+    }
+
+    function setControls({ deal, draw }){
+        dealBtn.disabled = !deal;
+        betInput.disabled = !deal;
+        drawBtn.disabled = !draw;
+    }
+
+    dealBtn.addEventListener("click", () => {
+        const bet = parseInt(betInput.value, 10) || 0;
+        if (bet < 10) { statusEl.textContent = "Cược tối thiểu 10 chips."; return; }
+        if (bet > getChips()) { statusEl.textContent = "Không đủ chips!"; return; }
+
+        currentBet = bet;
+        setChips(getChips() - bet);
+        deck = freshDeck();
+        hand = [deck.pop(), deck.pop(), deck.pop(), deck.pop(), deck.pop()];
+        held = [false, false, false, false, false];
+        stage = "dealt";
+
+        renderHand();
+        statusEl.textContent = "Bấm vào lá muốn giữ, rồi bấm Draw.";
+        setControls({ deal: false, draw: true });
+    });
+
+    drawBtn.addEventListener("click", () => {
+        hand = hand.map((c, i) => (held[i] ? c : deck.pop()));
+        stage = "idle";
+        renderHand();
+
+        const result = evaluateHand(hand);
+        const winnings = currentBet * result.mult;
+        if (winnings > 0) {
+            setChips(getChips() + winnings);
+            statusEl.textContent = `${result.name}! Thắng +${winnings} chips 🎉`;
+        } else {
+            statusEl.textContent = `${result.name}. Thua ${currentBet} chips, chúc may mắn lần sau.`;
+        }
+        setControls({ deal: true, draw: false });
+    });
+
+    setControls({ deal: true, draw: false });
 }

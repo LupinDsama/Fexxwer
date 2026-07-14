@@ -999,3 +999,333 @@ main .About img {
         padding: 1.2rem;
     }
 }
+/* ============================
+   MODELS (3D)
+============================ */
+.model-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.4rem;
+}
+
+.model-card{
+    background-color: var(--color-white);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.model-card:hover{
+    box-shadow: none;
+    transform: translateY(-4px);
+}
+
+.model-thumb{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background-color: #1a1a1a;
+}
+
+.model-thumb img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.model-body{
+    padding: var(--card-padding);
+}
+
+.model-body h3{
+    margin-bottom: 0.4rem;
+}
+
+.model-desc{
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+@media screen and (max-width: 576px){
+    .model-grid{
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================
+   GAME ZONE — Blackjack & Poker
+============================ */
+.chip-display{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--color-white);
+    box-shadow: var(--box-shadow);
+    border-radius: var(--border-radius-1);
+    padding: 0.7rem 1.1rem;
+    width: fit-content;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.chip-display span:first-child{
+    color: var(--color-primary);
+}
+
+.mini-btn{
+    margin-left: 0.8rem;
+    background-color: var(--color-background);
+    color: var(--color-dark-variant);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--border-radius-1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mini-btn:hover{
+    background-color: var(--color-light);
+}
+
+.game-switch{
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+}
+
+.game-tab-btn{
+    background-color: var(--color-white);
+    box-shadow: var(--box-shadow);
+    color: var(--color-dark-variant);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: var(--border-radius-1);
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.game-tab-btn.active{
+    background-color: var(--color-primary);
+    color: var(--color-dark);
+    box-shadow: none;
+}
+
+.game-panel{
+    display: none;
+}
+
+.game-panel.active-panel{
+    display: block;
+}
+
+.bj-table{
+    background: radial-gradient(ellipse at center, #1f6b4f 0%, #143f30 100%);
+    border-radius: var(--card-border-radius);
+    padding: 1.8rem;
+    margin-bottom: 1.2rem;
+}
+
+.bj-row{
+    margin-bottom: 1.4rem;
+}
+
+.bj-row:last-child{
+    margin-bottom: 0;
+}
+
+.bj-row h3{
+    color: var(--color-white);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.score-badge{
+    background-color: rgba(255,255,255,0.15);
+    color: var(--color-white);
+    font-size: 0.72rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 1rem;
+}
+
+.card-row{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    min-height: 84px;
+}
+
+.playing-card{
+    width: 58px;
+    height: 82px;
+    background-color: var(--color-white);
+    border-radius: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.35);
+    user-select: none;
+    animation: cardIn 0.25s ease;
+}
+
+@keyframes cardIn{
+    from{ transform: translateY(-12px) scale(0.9); opacity: 0; }
+    to{ transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.playing-card.red{ color: #e0463e; }
+.playing-card.black{ color: #1e1e1e; }
+
+.playing-card.card-back{
+    background: repeating-linear-gradient(45deg, var(--color-primary), var(--color-primary) 6px, #e0a94f 6px, #e0a94f 12px);
+}
+
+.playing-card .suit-icon{
+    font-size: 1.4rem;
+    line-height: 1;
+    margin-top: 0.15rem;
+}
+
+.poker-card{
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.15s ease;
+}
+
+.poker-card.held{
+    transform: translateY(-10px);
+    outline: 3px solid var(--color-primary);
+}
+
+.poker-card.held::after{
+    content: 'HOLD';
+    position: absolute;
+    bottom: -1.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    white-space: nowrap;
+}
+
+.poker-paytable{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.4rem 1rem;
+    background-color: var(--color-white);
+    box-shadow: var(--box-shadow);
+    border-radius: var(--border-radius-2);
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.2rem;
+    font-size: 0.76rem;
+}
+
+.poker-paytable span{
+    display: flex;
+    justify-content: space-between;
+    color: var(--color-dark-variant);
+}
+
+.poker-paytable b{
+    color: var(--color-primary);
+}
+
+#pokerCards{
+    background: radial-gradient(ellipse at center, #1f6b4f 0%, #143f30 100%);
+    border-radius: var(--card-border-radius);
+    padding: 1.8rem;
+    justify-content: center;
+    margin-bottom: 0.6rem;
+}
+
+.poker-hint{
+    font-size: 0.74rem;
+    margin-bottom: 0.8rem;
+}
+
+.game-status{
+    font-weight: 600;
+    margin-bottom: 1rem;
+    min-height: 1.3em;
+}
+
+.game-controls{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+
+.bet-controls{
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.bet-controls label{
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-dark-variant);
+}
+
+.bet-controls input{
+    width: 90px;
+    padding: 0.5rem 0.7rem;
+    border-radius: var(--border-radius-1);
+    background-color: var(--color-white);
+    box-shadow: var(--box-shadow);
+    font-weight: 600;
+}
+
+.action-controls{
+    display: flex;
+    gap: 0.6rem;
+}
+
+.game-btn{
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--border-radius-1);
+    background-color: var(--color-white);
+    box-shadow: var(--box-shadow);
+    color: var(--color-dark-variant);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.game-btn:hover:not(:disabled){
+    box-shadow: none;
+    transform: translateY(-2px);
+}
+
+.game-btn:disabled{
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.game-btn.primary{
+    background-color: var(--color-primary);
+    color: var(--color-dark);
+    box-shadow: none;
+}
+
+@media screen and (max-width: 576px){
+    .playing-card{
+        width: 48px;
+        height: 68px;
+        font-size: 0.9rem;
+    }
+    .game-controls{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

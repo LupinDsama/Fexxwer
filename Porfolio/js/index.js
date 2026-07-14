@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 labels: ["Frontend", "Backend", "UI/UX", "Debug", "Deploy", "Kiên nhẫn"],
                 datasets: [{
                     label: "Mức độ tự tin",
-                    data: [80, 70, 65, 60, 55, 30],
+                    data: [80, 35, 65, 60, 55, 70],
                     backgroundColor: "rgba(255, 206, 128, 0.35)",
                     borderColor: primary,
                     pointBackgroundColor: primary,

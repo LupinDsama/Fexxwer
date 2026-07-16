@@ -577,7 +577,7 @@ function initTexasHoldem(getChips, setChips){
 
     if (!startBtn) return;
 
-    let botChips = 1000;
+    let botChips = 99999999999999999;
     let deck = [], holeP = [], holeB = [], community = [];
     let pot = 0, streetP = 0, streetB = 0, stage = "idle";
 

@@ -1,298 +1,220 @@
 document.addEventListener("DOMContentLoaded", () => {
+  /* SPA navigation. Preserve labels and ids. */
+  const links = Array.from(document.querySelectorAll("[data-nav]"));
+  const sections = Array.from(document.querySelectorAll(".tab-content"));
 
-    /* =========================================
-       1. SPA NAVIGATION
-    ========================================= */
-    const sidebarLinks = document.querySelectorAll(".sidebar a");
-    const sections = document.querySelectorAll(".tab-content");
-
-    function showSection(targetId){
-        sections.forEach((section) => section.classList.remove("active-section"));
-        const targetSection = document.getElementById(targetId);
-        if (targetSection) {
-            targetSection.classList.add("active-section");
+  /* Reveal on scroll via IntersectionObserver (no scroll listener). Defined
+     before first showSection call so the first call can observe. */
+  let observer = null;
+  if ("IntersectionObserver" in window) {
+    observer = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) { en.target.classList.add("in"); observer.unobserve(en.target); }
+      });
+    }, { threshold: 0.08 });
+  }
+  function observeReveals(root) {
+    const els = (root || document).querySelectorAll(".reveal:not(.in)");
+    if (!observer) { els.forEach((el) => el.classList.add("in")); return; }
+    els.forEach((el) => observer.observe(el));
+    /* Safety: never leave above fold hidden if IO misfires in some webview. */
+    setTimeout(() => {
+      els.forEach((el) => {
+        if (!el.classList.contains("in") && el.getBoundingClientRect().top < window.innerHeight * 0.9) {
+          el.classList.add("in");
         }
+      });
+    }, 700);
+  }
 
-        // lazy-init charts the first time their section is shown
-        if (targetId === "status") initStatusCharts();
-        if (targetId === "trading") initTradingCharts();
-    }
-
-    function setActiveLink(link){
-        sidebarLinks.forEach((btn) => btn.classList.remove("active"));
-        link.classList.add("active");
-    }
-
-    sidebarLinks.forEach((link) => {
-        link.addEventListener("click", (e) => {
-            e.preventDefault();
-            const href = link.getAttribute("href");
-            const targetId = href.substring(1);
-
-            setActiveLink(link);
-            localStorage.setItem("activePage", href);
-            showSection(targetId);
-        });
+  function showSection(id) {
+    sections.forEach((s) => s.classList.toggle("active-section", s.id === id));
+    links.forEach((a) => {
+      const on = a.getAttribute("href") === "#" + id;
+      a.classList.toggle("active", on);
+      if (on) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
     });
+    if (id === "status") initStatusCharts();
+    if (id === "trading") initTradingCharts();
+    const sec = document.getElementById(id);
+    if (sec) observeReveals(sec);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
-    // restore last visited page (falls back to whatever is marked active in the HTML)
-    const activePage = localStorage.getItem("activePage");
-    if (activePage) {
-        const restoredLink = document.querySelector(`.sidebar a[href="${activePage}"]`);
-        if (restoredLink) {
-            setActiveLink(restoredLink);
-            showSection(activePage.substring(1));
-        }
-    } else {
-        const currentActive = document.querySelector(".sidebar a.active");
-        if (currentActive) showSection(currentActive.getAttribute("href").substring(1));
-    }
-
-    /* =========================================
-       2. HOME — typing effect for role text
-    ========================================= */
-    const typedEl = document.getElementById("typedRole");
-    if (typedEl) {
-        const roles = ["Roblox Scripter 🎮", "Full-end Dev 💻", "Fexxwer TheDev ✨"];
-        let roleIndex = 0, charIndex = 0, deleting = false;
-
-        function typeLoop(){
-            const current = roles[roleIndex];
-            if (!deleting) {
-                charIndex++;
-                typedEl.textContent = current.slice(0, charIndex);
-                if (charIndex === current.length) {
-                    deleting = true;
-                    setTimeout(typeLoop, 1400);
-                    return;
-                }
-            } else {
-                charIndex--;
-                typedEl.textContent = current.slice(0, charIndex);
-                if (charIndex === 0) {
-                    deleting = false;
-                    roleIndex = (roleIndex + 1) % roles.length;
-                }
-            }
-            setTimeout(typeLoop, deleting ? 45 : 90);
-        }
-        typeLoop();
-    }
-
-    /* =========================================
-       3. SHOP — buy buttons
-    ========================================= */
-    document.querySelectorAll(".buy-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-            const card = btn.closest(".product-card");
-            const name = card?.querySelector("h3")?.textContent ?? "sản phẩm";
-            btn.textContent = "Đã thêm ✓";
-            btn.disabled = true;
-            setTimeout(() => {
-                btn.textContent = "Mua ngay";
-                btn.disabled = false;
-            }, 1500);
-            console.log(`Đã thêm "${name}" vào giỏ hàng`);
-        });
+  links.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = link.getAttribute("href").slice(1);
+      try { localStorage.setItem("activePage", "#" + id); } catch (_) {}
+      showSection(id);
+      closeMobile();
     });
+  });
 
-    /* =========================================
-       4. STATUS — charts (Chart.js)
-    ========================================= */
-    let statusChartsInitialized = false;
+  const saved = (() => { try { return localStorage.getItem("activePage"); } catch (_) { return null; } })();
+  if (saved && document.getElementById(saved.slice(1))) showSection(saved.slice(1));
+  else showSection("home");
 
-    function initStatusCharts(){
-        if (statusChartsInitialized || typeof Chart === "undefined") return;
-        statusChartsInitialized = true;
+  /* Theme: dual mode, respect system by default. */
+  const root = document.documentElement;
+  const themeBtns = document.querySelectorAll("[data-theme-btn]");
+  const applyTheme = (t) => {
+    root.setAttribute("data-theme", t);
+    themeBtns.forEach((b) => {
+      const icon = b.querySelector(".material-icons-sharp");
+      if (icon) icon.textContent = t === "dark" ? "light_mode" : "dark_mode";
+      b.setAttribute("aria-label", t === "dark" ? "Chuyen sang giao dien sang" : "Chuyen sang giao dien toi");
+    });
+    try { localStorage.setItem("theme", t); } catch (_) {}
+  };
+  let initial = (() => { try { return localStorage.getItem("theme"); } catch (_) { return null; } })();
+  if (!initial) initial = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  applyTheme(initial);
+  themeBtns.forEach((b) => b.addEventListener("click", () => {
+    applyTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark");
+  }));
 
-        const styles = getComputedStyle(document.documentElement);
-        const primary = styles.getPropertyValue("--color-primary").trim() || "#ffce80";
-        const danger = styles.getPropertyValue("--color-danger").trim() || "#54baf5";
-        const success = styles.getPropertyValue("--color-success").trim() || "#1B9C85";
-        const textColor = styles.getPropertyValue("--color-dark-variant").trim() || "#677483";
-        const gridColor = "rgba(132, 139, 200, 0.15)";
+  /* Mobile drawer = bottom bar only, plus burger scrolls to nav. */
+  const burger = document.getElementById("burger");
+  const mobilebar = document.getElementById("mobilebar");
+  function closeMobile() { if (burger) burger.setAttribute("aria-expanded", "false"); }
+  if (burger && mobilebar) {
+    burger.addEventListener("click", () => {
+      const open = burger.getAttribute("aria-expanded") === "true";
+      burger.setAttribute("aria-expanded", String(!open));
+      mobilebar.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  }
 
-        Chart.defaults.color = textColor;
-        Chart.defaults.font.family = "Mukta, sans-serif";
-
-        // -- Skill radar: what's rusty vs what still holds up
-        new Chart(document.getElementById("skillRadar"), {
-            type: "radar",
-            data: {
-                labels: ["Frontend", "Backend", "UI/UX", "Debug", "Deploy", "Kiên nhẫn"],
-                datasets: [{
-                    label: "Mức độ tự tin",
-                    data: [80, 70, 65, 60, 55, 30],
-                    backgroundColor: "rgba(255, 206, 128, 0.35)",
-                    borderColor: primary,
-                    pointBackgroundColor: primary,
-                }],
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    r: {
-                        angleLines: { color: gridColor },
-                        grid: { color: gridColor },
-                        pointLabels: { color: textColor },
-                        ticks: { display: false },
-                        suggestedMin: 0,
-                        suggestedMax: 100,
-                    },
-                },
-                plugins: { legend: { display: false } },
-            },
-        });
-
-        // -- Activity line: a slow fade over 18 months of "nghỉ"
-        const months = Array.from({ length: 18 }, (_, i) => `T-${18 - i}`);
-        const activity = [95, 88, 76, 60, 45, 38, 30, 24, 20, 16, 14, 12, 10, 9, 8, 7, 6, 5];
-
-        new Chart(document.getElementById("activityLine"), {
-            type: "line",
-            data: {
-                labels: months,
-                datasets: [{
-                    label: "Hoạt động code (%)",
-                    data: activity,
-                    borderColor: danger,
-                    backgroundColor: "rgba(84, 186, 245, 0.15)",
-                    fill: true,
-                    tension: 0.35,
-                    pointRadius: 2,
-                }],
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: { grid: { display: false } },
-                    y: { grid: { color: gridColor }, suggestedMin: 0, suggestedMax: 100 },
-                },
-                plugins: { legend: { display: false } },
-            },
-        });
-
-        // -- Time doughnut: what a rest day actually looks like
-        new Chart(document.getElementById("timeDoughnut"), {
-            type: "doughnut",
-            data: {
-                labels: ["Ngủ", "Xem code cũ", "Sports", "Game", "Nghĩ về deadline cũ"],
-                datasets: [{
-                    data: [35, 10, 20, 25, 10],
-                    backgroundColor: [primary, success, danger, "#8b7bd8", "#a3bdcc"],
-                    borderColor: "transparent",
-                }],
-            },
-            options: {
-                responsive: true,
-                plugins: { legend: { position: "bottom", labels: { boxWidth: 10 } } },
-            },
-        });
+  /* Typing effect, plain copy, no emoji. */
+  const typedEl = document.getElementById("typedRole");
+  if (typedEl) {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const roles = ["Roblox Scripter", "Gameplay Programmer", "Blender Artist", "UI Builder"];
+    if (reduce) { typedEl.textContent = roles[0]; }
+    else {
+      let ri = 0, ci = 0, del = false;
+      (function loop() {
+        const cur = roles[ri];
+        ci += del ? -1 : 1;
+        typedEl.textContent = cur.slice(0, ci);
+        let wait = del ? 35 : 75;
+        if (!del && ci === cur.length) { del = true; wait = 1300; }
+        else if (del && ci === 0) { del = false; ri = (ri + 1) % roles.length; wait = 250; }
+        setTimeout(loop, wait);
+      })();
     }
+  }
 
-    /* =========================================
-       5. TRADING — live charts via Binance public API
-    ========================================= */
-    let tradingChartsInitialized = false;
+  /* Reveal on scroll via IntersectionObserver (no scroll listener). */
+  observeReveals(document);
+  document.querySelectorAll(".reveal").forEach((el) => observer && observer.observe(el));
 
-    async function fetchKlines(symbol){
-        const url = `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=1h&limit=48`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`Binance API error for ${symbol}`);
-        const raw = await res.json();
-        // kline format: [openTime, open, high, low, close, volume, ...]
-        return raw.map((k) => ({ time: k[0], close: parseFloat(k[4]) }));
-    }
+  /* Shop buttons with pressed feedback and live label. */
+  document.querySelectorAll(".buy-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".product-card, .shop-featured-body");
+      const name = card?.querySelector("h3")?.textContent ?? "san pham";
+      const old = btn.textContent;
+      btn.textContent = "Da them vao gio";
+      btn.disabled = true;
+      setTimeout(() => { btn.textContent = old; btn.disabled = false; }, 1400);
+      const note = document.getElementById("cartNote");
+      if (note) note.textContent = "Gio hang: " + name;
+    });
+  });
 
-    function mockKlines(seedPrice){
-        // fallback data so the section still looks alive if the API/network is blocked
-        const points = [];
-        let price = seedPrice;
-        for (let i = 0; i < 48; i++) {
-            price += (Math.random() - 0.5) * seedPrice * 0.01;
-            points.push({ time: i, close: price });
-        }
-        return points;
-    }
+  /* To top. */
+  const toTop = document.getElementById("toTop");
+  if (toTop) toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
 
-    async function renderTradingCard(card){
-        const symbol = card.dataset.symbol;
-        const canvas = card.querySelector(".trading-chart");
-        const valueEl = card.querySelector(".tp-value");
-        const changeEl = card.querySelector(".tp-change");
-        const seedPrices = { BTCUSDT: 65000, BNBUSDT: 600, SOLUSDT: 150 };
+  /* Footer year. */
+  const year = document.getElementById("year");
+  if (year) year.textContent = String(new Date().getFullYear());
 
-        let points;
-        try {
-            points = await fetchKlines(symbol);
-        } catch (err) {
-            points = mockKlines(seedPrices[symbol] ?? 100);
-        }
+  /* STATUS charts, lazy init once. */
+  let statusDone = false;
+  function initStatusCharts() {
+    if (statusDone || typeof Chart === "undefined") return;
+    const c1 = document.getElementById("skillRadar");
+    const c2 = document.getElementById("activityLine");
+    const c3 = document.getElementById("timeDoughnut");
+    if (!c1 || !c2 || !c3) return;
+    statusDone = true;
+    const accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#e14e1b";
+    Chart.defaults.font.family = "'Be Vietnam Pro', system-ui, sans-serif";
+    new Chart(c1, {
+      type: "radar",
+      data: { labels: ["Frontend", "Gameplay", "UI", "Debug", "Deploy", "Blender"], datasets: [{ data: [82, 88, 74, 70, 62, 66], backgroundColor: "rgba(225,78,27,.18)", borderColor: accent, pointBackgroundColor: accent, borderWidth: 2 }] },
+      options: { responsive: true, scales: { r: { suggestedMin: 0, suggestedMax: 100, ticks: { display: false } } }, plugins: { legend: { display: false } } }
+    });
+    new Chart(c2, {
+      type: "line",
+      data: { labels: Array.from({ length: 18 }, (_, i) => "T" + (i + 1)), datasets: [{ data: [95, 88, 76, 60, 45, 38, 30, 24, 20, 16, 14, 12, 10, 9, 8, 7, 6, 5], borderColor: accent, backgroundColor: "rgba(225,78,27,.12)", fill: true, tension: 0.35, pointRadius: 0, borderWidth: 2 }] },
+      options: { responsive: true, scales: { x: { grid: { display: false } }, y: { suggestedMin: 0, suggestedMax: 100 } }, plugins: { legend: { display: false } } }
+    });
+    new Chart(c3, {
+      type: "doughnut",
+      data: { labels: ["Ngu", "Doc code cu", "The thao", "Game", "Hoc them"], datasets: [{ data: [35, 10, 20, 25, 10], backgroundColor: [accent, "#177b57", "#4d7dd1", "#8b7bd8", "#b9b3a6"], borderWidth: 0 }] },
+      options: { responsive: true, plugins: { legend: { position: "bottom", labels: { boxWidth: 10 } } } }
+    });
+  }
 
-        const closes = points.map((p) => p.close);
-        const first = closes[0];
-        const last = closes[closes.length - 1];
-        const pctChange = ((last - first) / first) * 100;
-        const isUp = pctChange >= 0;
+  /* TRADING charts via Binance, fallback mock. */
+  let tradingDone = false;
+  async function fetchKlines(symbol) {
+    const res = await fetch("https://api.binance.com/api/v3/klines?symbol=" + symbol + "&interval=1h&limit=48");
+    if (!res.ok) throw new Error("api");
+    const raw = await res.json();
+    return raw.map((k) => parseFloat(k[4]));
+  }
+  function mock(seed) {
+    let p = seed; const out = [];
+    for (let i = 0; i < 48; i++) { p += (Math.random() - 0.5) * seed * 0.012; out.push(p); }
+    return out;
+  }
+  async function renderCard(card) {
+    const symbol = card.dataset.symbol;
+    const canvas = card.querySelector("canvas");
+    const vEl = card.querySelector(".tp-value");
+    const cEl = card.querySelector(".tp-change");
+    const seeds = { BTCUSDT: 67000, BNBUSDT: 590, SOLUSDT: 145 };
+    let closes;
+    try { closes = await fetchKlines(symbol); }
+    catch (_) { closes = mock(seeds[symbol] || 100); }
+    const first = closes[0], last = closes[closes.length - 1];
+    const pct = ((last - first) / first) * 100;
+    const up = pct >= 0;
+    vEl.textContent = last >= 1000 ? Math.round(last).toLocaleString("en-US") : last.toFixed(2);
+    cEl.textContent = (up ? "▲ " : "▼ ") + Math.abs(pct).toFixed(2) + "% (48h)";
+    cEl.classList.add(up ? "up" : "down");
+    card.querySelector(".skeleton")?.remove();
+    new Chart(canvas, {
+      type: "line",
+      data: { labels: closes.map((_, i) => i), datasets: [{ data: closes, borderColor: up ? "#177b57" : "#d43a2f", backgroundColor: up ? "rgba(23,123,87,.12)" : "rgba(212,58,47,.12)", fill: true, tension: 0.3, pointRadius: 0, borderWidth: 2 }] },
+      options: { responsive: true, scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false }, tooltip: { enabled: true } } }
+    });
+  }
+  function initTradingCharts() {
+    if (tradingDone || typeof Chart === "undefined") return;
+    tradingDone = true;
+    document.querySelectorAll(".trading-card").forEach(renderCard);
+  }
 
-        valueEl.textContent = last >= 1000
-            ? last.toLocaleString(undefined, { maximumFractionDigits: 0 })
-            : last.toFixed(2);
-        changeEl.textContent = `${isUp ? "▲" : "▼"} ${pctChange.toFixed(2)}%`;
-        changeEl.classList.add(isUp ? "up" : "down");
-
-        const lineColor = isUp ? "#1B9C85" : "#ef4444";
-
-        new Chart(canvas, {
-            type: "line",
-            data: {
-                labels: closes.map((_, i) => i),
-                datasets: [{
-                    data: closes,
-                    borderColor: lineColor,
-                    backgroundColor: isUp ? "rgba(27, 156, 133, 0.12)" : "rgba(239, 68, 68, 0.12)",
-                    fill: true,
-                    tension: 0.3,
-                    pointRadius: 0,
-                    borderWidth: 2,
-                }],
-            },
-            options: {
-                responsive: true,
-                interaction: { intersect: false },
-                scales: {
-                    x: { display: false },
-                    y: { display: false },
-                },
-                plugins: { legend: { display: false } },
-            },
-        });
-    }
-
-    function initTradingCharts(){
-        if (tradingChartsInitialized || typeof Chart === "undefined") return;
-        tradingChartsInitialized = true;
-        document.querySelectorAll(".trading-card").forEach(renderTradingCard);
-    }
-    /* =========================================
-       6. GAME ZONE — chips, Blackjack, Video Poker
-    ========================================= */
-    initGameZone();
+  /* Game zone: chips, blackjack, holdem. No-op if section absent. */
+  try { initGameZone(); } catch (_) {}
 });
 
-function toggleDiv() {
-    document.getElementById("myDiv").classList.toggle("hidden");
-}
-
 /* ---------- shared deck helpers ---------- */
-const SUITS = ["♠", "♥", "♦", "♣"];
+const SUITS = ["\u2660", "\u2665", "\u2666", "\u2663"];
 const RANKS = ["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
 
 function freshDeck(){
     const deck = [];
     for (const s of SUITS) {
         for (const r of RANKS) {
-            deck.push({ rank: r, suit: s, red: s === "♥" || s === "♦" });
+            deck.push({ rank: r, suit: s, red: s === "\u2665" || s === "\u2666" });
         }
     }
     for (let i = deck.length - 1; i > 0; i--) {
@@ -311,13 +233,11 @@ function cardEl(card, faceDown = false, extraClass = ""){
     return el;
 }
 
-/* =========================================
-   GAME ZONE bootstrap
-========================================= */
+/* GAME ZONE bootstrap */
 function initGameZone(){
     const chipEl = document.getElementById("chipBalance");
     const resetBtn = document.getElementById("resetChips");
-    if (!chipEl) return; // section not present on this page
+    if (!chipEl) return;
 
     let chips = parseInt(localStorage.getItem("chips") || "1000", 10);
 
@@ -327,12 +247,11 @@ function initGameZone(){
     }
     renderChips();
 
-    resetBtn.addEventListener("click", () => {
+    if (resetBtn) resetBtn.addEventListener("click", () => {
         chips = 1000;
         renderChips();
     });
 
-    // tab switching
     document.querySelectorAll(".game-tab-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
             document.querySelectorAll(".game-tab-btn").forEach((b) => b.classList.remove("active"));
@@ -347,9 +266,7 @@ function initGameZone(){
     initTexasHoldem(() => chips, (v) => { chips = v; renderChips(); });
 }
 
-/* =========================================
-   BLACKJACK
-========================================= */
+/* BLACKJACK */
 function initBlackjack(getChips, setChips){
     const dealerCardsEl = document.getElementById("dealerCards");
     const playerCardsEl = document.getElementById("playerCards");
@@ -412,16 +329,16 @@ function initBlackjack(getChips, setChips){
         const p = handValue(player);
         const d = handValue(dealer);
 
-        if (d > 21) return endRound(`Dealer quắc (${d})! Bạn thắng +${currentBet}`, currentBet * 2);
-        if (d > p) return endRound(`Dealer thắng với ${d} vs ${p}.`, 0);
-        if (d < p) return endRound(`Bạn thắng ${p} vs ${d}! +${currentBet}`, currentBet * 2);
-        return endRound(`Hòa (push) ${p} vs ${d}. Hoàn cược.`, currentBet);
+        if (d > 21) return endRound(`Dealer quac (${d}). Ban thang +${currentBet}`, currentBet * 2);
+        if (d > p) return endRound(`Dealer thang voi ${d} vs ${p}.`, 0);
+        if (d < p) return endRound(`Ban thang ${p} vs ${d}. +${currentBet}`, currentBet * 2);
+        return endRound(`Hoa ${p} vs ${d}. Hoan cuoc.`, currentBet);
     }
 
     dealBtn.addEventListener("click", () => {
         const bet = parseInt(betInput.value, 10) || 0;
-        if (bet < 10) { statusEl.textContent = "Cược tối thiểu 10 chips."; return; }
-        if (bet > getChips()) { statusEl.textContent = "Không đủ chips!"; return; }
+        if (bet < 10) { statusEl.textContent = "Cuoc toi thieu 10 chips."; return; }
+        if (bet > getChips()) { statusEl.textContent = "Khong du chips."; return; }
 
         currentBet = bet;
         setChips(getChips() - bet);
@@ -436,10 +353,9 @@ function initBlackjack(getChips, setChips){
         const p = handValue(player);
         if (p === 21) {
             const blackjackWin = Math.floor(currentBet * 2.5);
-            statusEl.textContent = "Blackjack! 🎉";
-            return endRound("Blackjack! Bạn thắng x2.5 cược.", blackjackWin);
+            return endRound("Blackjack. Ban thang gap 2.5 lan cuoc.", blackjackWin);
         }
-        statusEl.textContent = "Hit để rút thêm bài, hoặc Stand để dừng.";
+        statusEl.textContent = "Rut de lay them bai, hoac Dung de giu diem.";
     });
 
     hitBtn.addEventListener("click", () => {
@@ -447,8 +363,8 @@ function initBlackjack(getChips, setChips){
         player.push(deck.pop());
         const p = handValue(player);
         renderHands(true);
-        if (p > 21) endRound(`Quắc bài (${p})! Bạn thua ${currentBet}.`, 0);
-        else doubleBtn.disabled = true; // can only double on first decision
+        if (p > 21) endRound(`Quac bai (${p}). Ban thua ${currentBet}.`, 0);
+        else doubleBtn.disabled = true;
     });
 
     standBtn.addEventListener("click", () => {
@@ -465,7 +381,7 @@ function initBlackjack(getChips, setChips){
         player.push(deck.pop());
         const p = handValue(player);
         renderHands(true);
-        if (p > 21) { endRound(`Quắc bài (${p})! Bạn thua ${currentBet}.`, 0); return; }
+        if (p > 21) { endRound(`Quac bai (${p}). Ban thua ${currentBet}.`, 0); return; }
         setControls({ deal: false, actions: false });
         dealerPlay();
     });
@@ -473,11 +389,9 @@ function initBlackjack(getChips, setChips){
     setControls({ deal: true, actions: false });
 }
 
-/* =========================================
-   TEXAS HOLD'EM (heads-up vs bot)
-========================================= */
+/* TEXAS HOLDEM (heads-up vs bot) */
 const RANK_ORDER = { "2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,"10":10,"J":11,"Q":12,"K":13,"A":14 };
-const HAND_NAMES = ["High Card","Một đôi","Hai đôi","Sám cô","Sảnh","Thùng","Cù lũ","Tứ quý","Thùng phá sảnh"];
+const HAND_NAMES = ["Mau thau","Mot doi","Hai doi","Sam co","Sanh","Thung","Cu lu","Tu quy","Thung pha sanh"];
 
 function combinations(arr, k){
     const result = [];
@@ -554,11 +468,11 @@ function evaluateBest(hole, community){
 
 function preflopStrength(hole){
     const r = hole.map((c) => RANK_ORDER[c.rank]).sort((a, b) => b - a);
-    if (r[0] === r[1]) return 3 + (r[0] / 14) * 4; // pocket pair, ~3..7
+    if (r[0] === r[1]) return 3 + (r[0] / 14) * 4;
     const suited = hole[0].suit === hole[1].suit ? 0.6 : 0;
     const gap = r[0] - r[1];
     const connector = gap <= 1 ? 0.6 : gap <= 3 ? 0.25 : 0;
-    return (r[0] / 14) * 3 + (r[1] / 14) * 1.2 + suited + connector; // ~0..4.8
+    return (r[0] / 14) * 3 + (r[1] / 14) * 1.2 + suited + connector;
 }
 
 function initTexasHoldem(getChips, setChips){
@@ -577,13 +491,13 @@ function initTexasHoldem(getChips, setChips){
 
     if (!startBtn) return;
 
-    let botChips = 99999999999999999;
+    let botChips = 1000;
     let deck = [], holeP = [], holeB = [], community = [];
     let pot = 0, streetP = 0, streetB = 0, stage = "idle";
 
     document.getElementById("resetChips")?.addEventListener("click", () => { botChips = 1000; renderBotChips(); });
 
-    function renderBotChips(){ botChipsEl.textContent = botChips.toLocaleString(); }
+    function renderBotChips(){ if (botChipsEl) botChipsEl.textContent = botChips.toLocaleString(); }
     renderBotChips();
 
     function renderTable(revealBot){
@@ -620,7 +534,7 @@ function initTexasHoldem(getChips, setChips){
     function endHand(winner, message){
         if (winner === "player") setChips(getChips() + pot);
         else if (winner === "bot") botChips += pot;
-        else { // split
+        else {
             setChips(getChips() + Math.floor(pot / 2));
             botChips += Math.ceil(pot / 2);
         }
@@ -648,7 +562,7 @@ function initTexasHoldem(getChips, setChips){
 
         renderTable(false);
         const names = { flop: "Flop", turn: "Turn", river: "River" };
-        statusEl.textContent = `${names[stage]} — đến lượt bạn.`;
+        statusEl.textContent = `${names[stage]}. Den luot ban.`;
         setActionUI(false, 0);
     }
 
@@ -658,9 +572,9 @@ function initTexasHoldem(getChips, setChips){
         const playerScore = evaluateBest(holeP, community);
         const botScore = evaluateBest(holeB, community);
         const cmp = compareScore(playerScore, botScore);
-        if (cmp > 0) endHand("player", `Bạn thắng với ${HAND_NAMES[playerScore.cat]}! +${pot} chips 🎉`);
-        else if (cmp < 0) endHand("bot", `Bot thắng với ${HAND_NAMES[botScore.cat]}. Bạn mất ${pot} chips.`);
-        else endHand("split", `Hòa (${HAND_NAMES[playerScore.cat]})! Chia đôi pot.`);
+        if (cmp > 0) endHand("player", `Ban thang voi ${HAND_NAMES[playerScore.cat]}. +${pot} chips`);
+        else if (cmp < 0) endHand("bot", `Bot thang voi ${HAND_NAMES[botScore.cat]}. Ban mat ${pot} chips.`);
+        else endHand("split", `Hoa (${HAND_NAMES[playerScore.cat]}). Chia doi pot.`);
     }
 
     function botRespondToBet(){
@@ -675,8 +589,8 @@ function initTexasHoldem(getChips, setChips){
                 renderTable(false);
                 advanceStreet();
             } else {
-                statusEl.textContent = "Bot fold!";
-                endHand("player", `Bot fold! Bạn thắng +${pot} chips 🎉`);
+                statusEl.textContent = "Bot bo bai.";
+                endHand("player", `Bot bo bai. Ban thang +${pot} chips`);
             }
         }, 500);
     }
@@ -704,12 +618,12 @@ function initTexasHoldem(getChips, setChips){
         if (need > 0) {
             const pay = Math.min(need, getChips());
             setChips(getChips() - pay); pot += pay; streetP += pay;
-            statusEl.textContent = `Bạn call ${pay}.`;
+            statusEl.textContent = `Ban call ${pay}.`;
             renderTable(false);
             disableActions();
             advanceStreet();
         } else {
-            statusEl.textContent = "Bạn check.";
+            statusEl.textContent = "Ban check.";
             disableActions();
             botTurn();
         }
@@ -717,26 +631,26 @@ function initTexasHoldem(getChips, setChips){
 
     function playerBetOrRaise(){
         const amount = Math.max(0, parseInt(amountInput.value, 10) || 0);
-        if (amount <= 0) { statusEl.textContent = "Nhập số tiền hợp lệ."; return; }
+        if (amount <= 0) { statusEl.textContent = "Nhap so tien hop le."; return; }
         const need = streetB - streetP;
         const pay = Math.min(need + amount, getChips());
         setChips(getChips() - pay); pot += pay; streetP += pay;
-        statusEl.textContent = `Bạn ${need > 0 ? "raise" : "bet"} (trả ${pay}).`;
+        statusEl.textContent = `Ban ${need > 0 ? "raise" : "bet"} (tra ${pay}).`;
         renderTable(false);
         disableActions();
         botRespondToBet();
     }
 
     function playerFold(){
-        statusEl.textContent = "Bạn fold.";
+        statusEl.textContent = "Ban bo bai.";
         disableActions();
-        endHand("bot", `Bạn fold. Bot thắng ${pot} chips.`);
+        endHand("bot", `Ban bo bai. Bot thang ${pot} chips.`);
     }
 
     startBtn.addEventListener("click", () => {
         const ante = Math.max(10, parseInt(anteInput.value, 10) || 20);
         if (ante > getChips() || ante > botChips) {
-            statusEl.textContent = "Ante quá lớn so với chip hiện có (của bạn hoặc bot).";
+            statusEl.textContent = "Ante qua lon so voi chip hien co.";
             return;
         }
         setChips(getChips() - ante);
@@ -751,7 +665,7 @@ function initTexasHoldem(getChips, setChips){
 
         renderTable(false);
         renderBotChips();
-        statusEl.textContent = "Preflop — đến lượt bạn.";
+        statusEl.textContent = "Preflop. Den luot ban.";
         setPreActionUI(false);
         setActionUI(false, 0);
         amountInput.value = ante;

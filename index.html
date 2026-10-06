@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fexxwer TheDev - Roblox Scripter and Game UI Builder</title>
-<meta name="description" content="Portfolio cua Fexxwer TheDev: Roblox gameplay, GUI template, Blender model, shop source code va trading notes.">
+<meta name="description" content="Portfolio cua Fexxwer TheDev: Roblox gameplay, GUI template, Blender model, shop source code va backend notes.">
 <meta property="og:title" content="Fexxwer TheDev">
 <meta property="og:description" content="Roblox scripter. Gameplay, UI, Blender model va source code.">
 <meta property="og:type" content="website">
@@ -35,7 +35,7 @@
       <a href="#projects" data-nav>Projects</a>
       <a href="#models" data-nav>Models</a>
       <a href="#games" data-nav>Games</a>
-      <a href="#trading" data-nav>Trading</a>
+      <a href="#coding" data-nav>Coding</a>
       <a href="#status" data-nav>Status</a>
     </nav>
     <div class="top-actions">
@@ -215,7 +215,7 @@
         <ul class="tut-list">
           <li><span class="material-icons-sharp">play_circle</span><div><b>Portfolio mot trang <span class="dur">20 phut</span></b><p>HTML CSS JS thuan, toi va sang, chay tot tren dien thoai.</p></div></li>
           <li><span class="material-icons-sharp">play_circle</span><div><b>Model dao gam 5k tris <span class="dur">25 phut</span></b><p>Dung Blender, bake texture va xuat FBX sach.</p></div></li>
-          <li><span class="material-icons-sharp">play_circle</span><div><b>Doc chart gia co ban <span class="dur">11 phut</span></b><p>Nen, khang cu va RSI cho nguoi moi.</p></div></li>
+          <li><span class="material-icons-sharp">play_circle</span><div><b>Profiling tim bottleneck <span class="dur">13 phut</span></b><p>MicroProfiler, memory tag va cach doc spike.</p></div></li>
         </ul>
       </div>
     </div>
@@ -338,59 +338,83 @@
     </div>
   </section>
 
-  <!-- TRADING -->
-  <section id="trading" class="tab-content" aria-label="Giao dich">
+  <!-- CODING -->
+  <section id="coding" class="tab-content" aria-label="Ky thuat backend">
     <div class="sec-head reveal">
-      <span class="eyebrow">Trading</span>
-      <h1>Gia that tu Binance, ghi chep that</h1>
-      <p>Bieu do 48 gio gan nhat. Neu mat mang, trang tu ve du lieu mau de khong vo layout.</p>
+      <span class="eyebrow">Coding / Backend</span>
+      <h1>Handler sach, data ben, debug co he thong</h1>
+      <p>Mot Remote duy nhat dieu phoi. Data co khoa session va hang doi retry. Loi duoc log co id de trace lai trong 1 phut.</p>
     </div>
-    <div class="trading-grid">
-      <div class="trading-card head reveal" data-symbol="BTCUSDT">
-        <h3>BTC / USDT</h3>
-        <div class="trading-price"><span class="tp-value">Dang tai</span><span class="tp-change">Cho du lieu</span></div>
-        <div class="skeleton"></div>
-        <canvas class="trading-chart" height="140" aria-label="Bieu do BTC"></canvas>
-      </div>
-      <div class="trading-card head reveal" data-symbol="BNBUSDT">
-        <h3>BNB / USDT</h3>
-        <div class="trading-price"><span class="tp-value">Dang tai</span><span class="tp-change">Cho du lieu</span></div>
-        <div class="skeleton"></div>
-        <canvas class="trading-chart" height="140" aria-label="Bieu do BNB"></canvas>
-      </div>
-      <div class="trading-card head reveal" data-symbol="SOLUSDT">
-        <h3>SOL / USDT</h3>
-        <div class="trading-price"><span class="tp-value">Dang tai</span><span class="tp-change">Cho du lieu</span></div>
-        <div class="skeleton"></div>
-        <canvas class="trading-chart" height="140" aria-label="Bieu do SOL"></canvas>
-      </div>
+
+    <div class="coding-stats">
+      <div class="stat-box reveal"><span class="material-icons-sharp">dns</span><strong>1</strong><p>Remote dispatcher cho shop, quest, save</p></div>
+      <div class="stat-box reveal"><span class="material-icons-sharp">speed</span><strong>&lt;80ms</strong><p>p95 handler do tren may that</p></div>
+      <div class="stat-box reveal"><span class="material-icons-sharp">save</span><strong>0</strong><p>Vụ mat data sau khi gan session lock</p></div>
+      <div class="stat-box reveal"><span class="material-icons-sharp">inventory_2</span><strong>6</strong><p>Package rieng tai dung qua 3 game</p></div>
     </div>
-    <div class="panel reveal">
-      <h3>Kien thuc nhanh</h3>
-      <div class="tk-grid">
-        <div class="tk-card solid"><span class="material-icons-sharp">trending_up</span><h3>Ho tro va khang cu</h3><p>Vung gia thuong bat len hoac bi chan lai.</p></div>
-        <div class="tk-card"><span class="material-icons-sharp">speed</span><h3>RSI</h3><p>Do dong luong 0 den 100. Tren 70 la qua mua.</p></div>
-        <div class="tk-card"><span class="material-icons-sharp">show_chart</span><h3>Duong trung binh</h3><p>Lam muot bien dong va nhin ro xu huong.</p></div>
-        <div class="tk-card"><span class="material-icons-sharp">savings</span><h3>DCA</h3><p>Chia von mua deu thay vi all in mot lan.</p></div>
-        <div class="tk-card solid"><span class="material-icons-sharp">shield</span><h3>Cat lo va chot loi</h3><p>Dat san tu dong de bao ve von.</p></div>
-        <div class="tk-card"><span class="material-icons-sharp">pie_chart</span><h3>Von hoa</h3><p>Gia nhan cung luu hanh, noi quy mo that.</p></div>
-      </div>
-      <p class="disclaimer">Noi dung chi de hoc, khong phai loi khuyen dau tu.</p>
-    </div>
-    <div class="trading-bottom">
+
+    <div class="split">
       <div class="panel reveal">
-        <h3>Bai hoc ngan</h3>
+        <h3><span class="material-icons-sharp" style="vertical-align:-5px;color:var(--accent)">hub</span> Handler registry</h3>
+        <p>Client chi goi ten lenh. Server validate, rate-limit roi moi chay logic. Them chuc nang khong sua file cu.</p>
+        <div class="code-window">
+          <div class="code-head"><span></span><span></span><span></span><b>Server/HandlerRegistry.lua</b><button class="mini-btn copy-btn" data-copy="handler">Copy</button></div>
+<pre id="code-handler"><code><span class="k">local</span> Handlers = {}
+<span class="k">local</span> Cooldown = {} <span class="c">-- [userId..name] = tick</span>
+
+<span class="k">function</span> Handlers.register(name, cooldown, fn)
+  Handlers[name] = <span class="k">function</span>(player, ...)
+    <span class="k">local</span> key = player.UserId .. name
+    <span class="k">if</span> tick() - (Cooldown[key] <span class="k">or</span> 0) &lt; cooldown <span class="k">then return</span> <span class="k">nil</span> <span class="k">end</span>
+    Cooldown[key] = tick()
+    <span class="k">local</span> ok, err = pcall(fn, player, ...)
+    <span class="k">if not</span> ok <span class="k">then</span> Logger.warn(name, player.UserId, err) <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></code></pre>
+        </div>
+        <div class="tags"><span>Single Remote</span><span>pcall isolate</span><span>Rate-limit 0.4s</span></div>
+      </div>
+
+      <div class="panel reveal">
+        <h3><span class="material-icons-sharp" style="vertical-align:-5px;color:var(--accent)">database</span> Kho du lieu</h3>
+        <p>Session lock chong ghi de khi player nhay server. Ghi loi vao queue, retry theo cap so nhan.</p>
+        <div class="code-window">
+          <div class="code-head"><span></span><span></span><span></span><b>Server/DataStore.lua</b><button class="mini-btn copy-btn" data-copy="data">Copy</button></div>
+<pre id="code-data"><code>Store:UpdateAsync(key, <span class="k">function</span>(old)
+  old = old <span class="k">or</span> Defaults.new()
+  <span class="k">if</span> old._lock ~= jobId <span class="k">then return nil end</span>
+  old.coins += delta
+  old._v += 1 <span class="c">-- migrate khi doi schema</span>
+  <span class="k">return</span> old
+<span class="k">end</span>)</code></pre>
+        </div>
+        <div class="tags"><span>ProfileStore fork</span><span>Autosave 60s</span><span>Retry 1s / 2s / 4s</span></div>
+      </div>
+    </div>
+
+    <div class="split" style="margin-top:1rem">
+      <div class="panel reveal">
+        <h3><span class="material-icons-sharp" style="vertical-align:-5px;color:var(--accent)">bug_report</span> Debug theo quy trinh</h3>
         <ul class="tut-list">
-          <li><span class="material-icons-sharp">play_circle</span><div><b>Doc nen Nhat co ban</b><p>Doji, Hammer, Engulfing trong 5 phut.</p></div></li>
-          <li><span class="material-icons-sharp">play_circle</span><div><b>Quan ly von 1 2 3</b><p>Chia lenh, dat cat lo, khong all in.</p></div></li>
-          <li><span class="material-icons-sharp">play_circle</span><div><b>RSI va MACD</b><p>Ket hop 2 chi bao de loc nhieu.</p></div></li>
+          <li><span class="material-icons-sharp">search</span><div><b>Tai hien bang id log</b><p>Moi warn kem traceId, tim lai trong file log 1 dong.</p></div></li>
+          <li><span class="material-icons-sharp">memory</span><div><b>Profiler truoc, doan sau</b><p>MicroProfiler + Mem tag. Fix spike roi moi toi uu code.</p></div></li>
+          <li><span class="material-icons-sharp">science</span><div><b>Test truoc khi merge</b><p>TestEZ cho thuat toan inventory, sort, path. Fail thi khong merge.</p></div></li>
         </ul>
+        <div class="term-log"><span class="t-dim">[12:04:31]</span> <span class="t-ok">OK</span> Shop.Buy p95=62ms n=412<br><span class="t-dim">[12:04:32]</span> <span class="t-warn">WARN #a3f1</span> Save retry 1/3 key=Player_88<br><span class="t-dim">[12:04:34]</span> <span class="t-ok">OK</span> flush queue, 0 pending</div>
       </div>
+
       <div class="panel reveal">
-        <h3>Cau nho khi FOMO</h3>
-        <div class="quote-card"><p>Hay so hai khi nguoi khac tham lam, va tham lam khi nguoi khac so hai.</p></div>
-        <div class="quote-card"><p>Quy tac 1: dung de mat tien. Quy tac 2: dung quen quy tac 1.</p></div>
-        <div class="quote-card"><p>Rui ro den tu viec ban khong biet minh dang lam gi.</p></div>
+        <h3><span class="material-icons-sharp" style="vertical-align:-5px;color:var(--accent)">deployed_code</span> Thuat toan + package rieng</h3>
+        <p>Khong viet lai thu da co. Dung thu vien chuan, goi trong package rieng de 3 game cung dung.</p>
+        <div class="pkg-grid">
+          <div><b>Net</b><p>Packet, queue, retry gui Remote</p></div>
+          <div><b>DataKit</b><p>Defaults, migrate v1-v4, lock</p></div>
+          <div><b>Logger</b><p>Warn/error kem traceId</p></div>
+          <div><b>InvAlgo</b><p>Stack, sort O(n log n), search O(1)</p></div>
+          <div><b>Promise</b><p>Thay spawn/wait roi rac</p></div>
+          <div><b>Config</b><p>Constant 1 cho, doi khong so loi</p></div>
+        </div>
+        <div class="tags"><span>Wally / Pesde</span><span>Stylua + Selene</span><span>Semver rieng</span></div>
       </div>
     </div>
   </section>
@@ -436,7 +460,7 @@
     <a href="#projects" data-nav><span class="material-icons-sharp">work</span>Jobs</a>
     <a href="#models" data-nav><span class="material-icons-sharp">view_in_ar</span>3D</a>
     <a href="#games" data-nav><span class="material-icons-sharp">casino</span>Game</a>
-    <a href="#trading" data-nav><span class="material-icons-sharp">candlestick_chart</span>Coin</a>
+    <a href="#coding" data-nav><span class="material-icons-sharp">terminal</span>Code</a>
     <a href="#status" data-nav><span class="material-icons-sharp">inventory</span>Status</a>
   </nav>
 </div>

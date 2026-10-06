@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fexxwer TheDev - Roblox Scripter and Game UI Builder</title>
+<meta name="description" content="Portfolio cua Fexxwer TheDev: Roblox gameplay, GUI template, Blender model, shop source code va backend notes.">
+<meta property="og:title" content="Fexxwer TheDev">
+<meta property="og:description" content="Roblox scripter. Gameplay, UI, Blender model va source code.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23ff6a2b'/%3E%3Ctext x='16' y='22' font-size='16' text-anchor='middle' fill='%23140b06' font-family='sans-serif' font-weight='bold'%3EF%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<noscript><style>.reveal{opacity:1!important;transform:none!important}.tab-content{display:block}</style></noscript>
+</head>
+<body>
+<a class="skip" href="#main">Bo qua toi noi dung</a>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#home" data-nav aria-label="Ve trang chu">
+      <img src="../img/avatar1.jpg?v=2" alt="Anh dai dien cua Fexxwer">
+      <b>Fexxwer<em>TheDev</em></b>
+    </a>
+    <nav class="nav" aria-label="Dieu huong chinh">
+      <a href="#home" data-nav class="active">Home</a>
+      <a href="#shop" data-nav>Shop</a>
+      <a href="#vfx" data-nav>VFX</a>
+      <a href="#gfx" data-nav>GFX</a>
+      <a href="#showcase" data-nav>Showcase</a>
+      <a href="#tutorials" data-nav>Tutorials</a>
+      <a href="#projects" data-nav>Projects</a>
+      <a href="#models" data-nav>Models</a>
+      <a href="#games" data-nav>Games</a>
+      <a href="#coding" data-nav>Coding</a>
+      <a href="#status" data-nav>Status</a>
+    </nav>
+    <div class="top-actions">
+      <button class="icon-btn" data-theme-btn aria-label="Doi giao dien"><span class="material-icons-sharp">dark_mode</span></button>
+      <a class="cta" href="mailto:nhantk123vip@gmail.com">Lien he</a>
+      <button class="icon-btn burger" id="burger" aria-expanded="false" aria-label="Mo menu"><span class="material-icons-sharp">menu</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+<main id="main">
+
+  <!-- HOME -->
+  <section id="home" class="tab-content active-section" aria-label="Trang chu">
+    <div class="hero">
+      <div class="hero-copy reveal">
+        <h1>Fexxwer <span class="accent">TheDev</span><br>lam game choi duoc</h1>
+        <p class="hero-role">Minh la <span id="typedRole">Roblox Scripter</span><span class="typed-cursor">|</span></p>
+        <p class="hero-sub">Nhan script gameplay, GUI chong lag va model Blender dung duoc trong game that.</p>
+        <div class="hero-ctas">
+          <a class="cta" href="#projects" data-nav>Xem du an</a>
+          <a class="btn-ghost" href="#shop" data-nav>Mua template</a>
+        </div>
+        <div class="stack-row" aria-label="Ky nang chinh">
+          <span>Lua</span><span>JavaScript</span><span>HTML/CSS</span><span>Blender</span><span>Roblox Studio</span>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <figure class="hero-photo reveal">
+          <img src="../img/avatar1.jpg?v=2" alt="Anh lam viec cua Fexxwer" fetchpriority="high">
+          <figcaption>
+            <span><b>San sang nhan commission tu 20 USD</b><small>Tra loi qua Gmail trong 24 gio</small></span>
+            <span class="live-dot" title="Dang mo commission"></span>
+          </figcaption>
+        </figure>
+        <div class="hero-mini">
+          <div class="mini-card reveal"><small>Kinh nghiem</small><strong>1+ nam</strong><p>Script gameplay va UI</p></div>
+          <div class="code-card reveal" aria-label="Doan code mau">-- Sky Land: harvest loop<br><span class="k">local</span> tool = <span class="s">"HarvestService"</span><br><span class="k">function</span> collect(p) <span class="c">-- anti spam 0.4s</span><br>&nbsp;&nbsp;<span class="k">return</span> p.Backpack:Add(tool)<br><span class="k">end</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bento">
+      <article class="bento-card tint reveal">
+        <span class="ico"><span class="material-icons-sharp">bolt</span></span>
+        <h3>Commission mo tu tuan nay</h3>
+        <p>Nhan script gameplay, fix lag GUI va setup data. Bao gia ro rang truoc khi code, ban giao co huong dan.</p>
+      </article>
+      <article class="bento-card reveal">
+        <span class="ico"><span class="material-icons-sharp">support_agent</span></span>
+        <h3>Can giup do</h3>
+        <p>Gmail: nhantk123vip@gmail.com. Nhan hoi ve loi script, hieu nang va cach to chuc project.</p>
+      </article>
+      <figure class="bento-card photo reveal">
+        <img src="../img/avatar5.jpg" alt="Anh setup goc lam viec" loading="lazy">
+        <div><b>Goc lam viec hien tai</b><p>Roblox Studio, VS Code va Blender</p></div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- SHOP -->
+  <section id="shop" class="tab-content" aria-label="Cua hang">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Shop</span>
+      <h1>Source mua mot lan, dung mai mai</h1>
+      <p>Toan bo source co video demo va huong dan cai dat. Ho tro fix loi 7 ngay sau khi mua.</p>
+    </div>
+    <p id="cartNote" class="sec-head" style="font-size:.82rem;color:var(--muted)" aria-live="polite"></p>
+
+    <article class="shop-featured reveal">
+      <img src="../img/discordbot.jpe" alt="Anh minh hoa Discord bot" loading="lazy">
+      <div class="shop-featured-body">
+        <h3>Discord bot source (JS)</h3>
+        <p class="desc">Bot moderation kem music, lenh slash, de custom. Kem file env mau va huong dan deploy.</p>
+        <div class="tags"><span>Node.js</span><span>Slash command</span><span>Music</span></div>
+        <div class="price-row"><span class="price">350.000d</span><span class="price old">500.000d</span><span class="off">Tiet kiem 30%</span></div>
+        <div style="margin-top:1rem"><button class="buy-btn">Mua ngay</button></div>
+      </div>
+    </article>
+
+    <div class="product-grid">
+      <article class="product-card reveal">
+        <div class="thumb"><img src="../img/dashboard.jpe" alt="Anh dashboard UI kit" loading="lazy"></div>
+        <div class="body"><h3>Dashboard UI kit</h3><p class="product-desc">Admin dashboard HTML CSS JS, co san che do toi.</p>
+        <div class="price-row"><span class="price">200.000d</span><span class="price old">250.000d</span><span class="off">-20%</span></div>
+        <div style="margin-top:.7rem"><button class="buy-btn">Mua ngay</button></div></div>
+      </article>
+      <article class="product-card reveal">
+        <div class="thumb"><img src="../img/robloxGUI.png" alt="Anh GUI template Roblox" loading="lazy"></div>
+        <div class="body"><h3>Roblox GUI template</h3><p class="product-desc">GUI gon, chong lag, keo tha la chay.</p>
+        <div class="price-row"><span class="price">128.000d</span><span class="price old">150.000d</span><span class="off">-15%</span></div>
+        <div style="margin-top:.7rem"><button class="buy-btn">Mua ngay</button></div></div>
+      </article>
+      <article class="product-card reveal">
+        <div class="thumb"><img src="../img/porfoliotemplate.jpg" alt="Anh portfolio template" loading="lazy"></div>
+        <div class="body"><h3>Portfolio template</h3><p class="product-desc">Trang portfolio mot trang giong trang nay, full source.</p>
+        <div class="price-row"><span class="price">300.000d</span><span class="price old">400.000d</span><span class="off">-25%</span></div>
+        <div style="margin-top:.7rem"><button class="buy-btn">Mua ngay</button></div></div>
+      </article>
+      <article class="product-card reveal">
+        <div class="thumb"><img src="../img/scriptautofarm.jpg" alt="Anh script auto farm" loading="lazy"></div>
+        <div class="body"><h3>Script auto farm</h3><p class="product-desc">Chay nen, cau hinh don gian, co gioi han chong ban.</p>
+        <div class="price-row"><span class="price">180.000d</span><span class="price old">300.000d</span><span class="off">-40%</span></div>
+        <div style="margin-top:.7rem"><button class="buy-btn">Mua ngay</button></div></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- VFX -->
+  <section id="vfx" class="tab-content" aria-label="Hieu ung">
+    <div class="sec-head reveal">
+      <h1>Hieu ung dung trong edit that</h1>
+      <p>Pack VFX Vol 1 gom 50 hieu ung chuyen canh, glow va shake nhe, dung duoc cho edit gameplay.</p>
+    </div>
+    <div class="reel">
+      <figure class="reveal"><img src="../img/vfx.jpe" alt="Anh hieu ung glow" loading="lazy"><figcaption><b>Glow pack</b>20 preset phat sang cho skill va vu khi</figcaption></figure>
+      <figure class="reveal"><img src="https://picsum.photos/seed/fexxwer-hit/640/480" alt="Anh hieu ung va cham" loading="lazy"><figcaption><b>Hit impact</b>12 khung va cham toc do cao</figcaption></figure>
+      <figure class="reveal"><img src="https://picsum.photos/seed/fexxwer-smoke/640/480" alt="Anh hieu ung khoi" loading="lazy"><figcaption><b>Smoke loop</b>Vong khoi lap lai cho map suong mu</figcaption></figure>
+      <figure class="reveal"><img src="https://picsum.photos/seed/fexxwer-trans/640/480" alt="Anh hieu ung chuyen canh" loading="lazy"><figcaption><b>Transition</b>18 chuyen canh sach cho video dai</figcaption></figure>
+    </div>
+    <div class="split" style="margin-top:1rem">
+      <div class="panel reveal"><h3>Cach ban giao</h3><p>File After Effects va MP4 alpha. Thu muc dat ten theo tac dung, tim trong 10 giay.</p></div>
+      <div class="panel reveal"><h3>Gia pack Vol 1</h3><p>162.000d, giam tu 180.000d. Mua kem GUI template duoc giam them 10 phan tram.</p></div>
+    </div>
+  </section>
+
+  <!-- GFX -->
+  <section id="gfx" class="tab-content" aria-label="Thiet ke">
+    <div class="sec-head reveal">
+      <h1>GFX</h1>
+      <p>Trang nay dang trong.</p>
+    </div>
+  </section>
+
+  <!-- SHOWCASE -->
+  <section id="showcase" class="tab-content" aria-label="Trung bay">
+    <div class="sec-head reveal">
+      <h1>Nhung thu da lam xong va chay duoc</h1>
+      <p>Chon 3 mon tam dac nhat. Bam vao lien ket de choi thu hoac xem video.</p>
+    </div>
+    <article class="feature reveal">
+      <img src="https://picsum.photos/seed/skyland/960/640" alt="Anh gameplay Sky Land" loading="lazy">
+      <div class="feature-body">
+        <h3>Sky Land tren Roblox</h3>
+        <p class="role-line">Full script gameplay trong team 4 dev</p>
+        <p style="font-size:.88rem;color:var(--muted)">Game phieu luu xay dung. Minh phu trach vong lap thu hoach, du lieu nguoi choi va logic UI.</p>
+        <div class="links" style="margin-top:1rem">
+          <a class="project-link" href="https://www.roblox.com/games/121428001502265/Sky-Land" target="_blank" rel="noopener"><span class="material-icons-sharp">sports_esports</span>Choi game</a>
+          <a class="project-link" href="https://youtu.be/5_LU5pPpwog?si=lufnfIpLxp2AlWu0" target="_blank" rel="noopener"><span class="material-icons-sharp">smart_display</span>Xem video</a>
+        </div>
+      </div>
+    </article>
+    <div class="split" style="margin-top:1rem">
+      <div class="panel reveal"><h3>GUI chong lag</h3><p>Mot bo GUI dung chung cho 3 game, giam 40 phan tram thoi gian tai menu tren may yeu.</p></div>
+      <div class="panel reveal"><h3>Model Blender</h3><p>Vu khi va prop toi uu duoi 5k tris, san sang import vao Roblox va Unity.</p></div>
+    </div>
+  </section>
+
+  <!-- TUTORIALS -->
+  <section id="tutorials" class="tab-content" aria-label="Huong dan">
+    <div class="sec-head reveal">
+      <h1>Hoc theo cach minh da tu hoc</h1>
+      <p>Moi bai deu co file mau tai ve. Khong ly thuyet dai, lam den dau chay duoc den do.</p>
+    </div>
+    <div class="split">
+      <div class="panel reveal">
+        <h3>Roblox co ban</h3>
+        <ul class="tut-list">
+          <li><span class="material-icons-sharp">play_circle</span><div><b>DataStore khong mat do <span class="dur">12 phut</span></b><p>Luu tien va vat pham an toan, co xu ly loi mang.</p></div></li>
+          <li><span class="material-icons-sharp">play_circle</span><div><b>GUI chong spam click <span class="dur">9 phut</span></b><p>Khoa nut dung cach, khong dung wait vo toi va.</p></div></li>
+          <li><span class="material-icons-sharp">play_circle</span><div><b>Remote event gon <span class="dur">15 phut</span></b><p>Mot file server duy nhat cho shop, quest va save.</p></div></li>
+        </ul>
+      </div>
+      <div class="panel reveal">
+        <h3>Web va Blender</h3>
+        <ul class="tut-list">
+          <li><span class="material-icons-sharp">play_circle</span><div><b>Portfolio mot trang <span class="dur">20 phut</span></b><p>HTML CSS JS thuan, toi va sang, chay tot tren dien thoai.</p></div></li>
+          <li><span class="material-icons-sharp">play_circle</span><div><b>Model dao gam 5k tris <span class="dur">25 phut</span></b><p>Dung Blender, bake texture va xuat FBX sach.</p></div></li>
+          <li><span class="material-icons-sharp">play_circle</span><div><b>Profiling tim bottleneck <span class="dur">13 phut</span></b><p>MicroProfiler, memory tag va cach doc spike.</p></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="tab-content" aria-label="Du an">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Projects</span>
+      <h1>Du an da len song</h1>
+      <p>Minh lam that, co link choi duoc va video. Khong dua mockup vao day.</p>
+    </div>
+    <article class="feature reveal">
+      <img src="../img/SkyLand.png" alt="Anh thumbnail game Sky Land" loading="lazy">
+      <div class="feature-body">
+        <h3>Sky Land</h3>
+        <p class="role-line">Full-end scripter, 1 trong 4 dev chinh</p>
+        <p style="font-size:.88rem;color:var(--muted)">Game phieu luu xay dung tren Roblox. Phu trach gameplay, he thong va logic UI tu dau den khi open beta.</p>
+        <div class="tags"><span>Roblox</span><span>Lua</span><span>Gameplay</span><span>UI</span></div>
+        <div class="links">
+          <a class="project-link" href="https://www.roblox.com/games/121428001502265/Sky-Land" target="_blank" rel="noopener"><span class="material-icons-sharp">sports_esports</span>Choi game</a>
+          <a class="project-link" href="https://www.roblox.com/games/121428001502265/Sky-Land" target="_blank" rel="noopener"><i class="fa-brands fa-discord"></i>Discord</a>
+          <a class="project-link" href="https://youtu.be/5_LU5pPpwog?si=lufnfIpLxp2AlWu0" target="_blank" rel="noopener"><span class="material-icons-sharp">smart_display</span>Youtube</a>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- MODELS -->
+  <section id="models" class="tab-content" aria-label="Model 3D">
+    <div class="sec-head reveal">
+      <h1>Model 3D tu lam trong Blender</h1>
+      <p>Toi uu cho game: it luoi, texture gon, ten file sach.</p>
+    </div>
+    <div class="model-grid">
+      <article class="model-card reveal">
+        <div class="ph"><img src="../img/modelsungaka.jpg" alt="Model sung AK" loading="lazy"></div>
+        <div class="model-body"><h3>Sung AK</h3><p class="model-desc">Vu khi chi tiet, san sang rig va import vao game engine.</p><div class="tags"><span>Blender</span><span>Weapon</span><span>Game ready</span></div></div>
+      </article>
+      <article class="model-card reveal">
+        <div class="ph"><img src="../img/modeldao.jpg" alt="Model dao gam" loading="lazy"></div>
+        <div class="model-body"><h3>Dao gam</h3><p class="model-desc">Hard surface, bake texture kem luoi dao phat sang.</p><div class="tags"><span>Blender</span><span>Hard surface</span></div></div>
+      </article>
+      <article class="model-card reveal">
+        <div class="ph"><img src="../img/modelmarket.jpg" alt="Model sap cho" loading="lazy"></div>
+        <div class="model-body"><h3>Sap cho</h3><p class="model-desc">Prop moi truong, dung cho scene game hoac diorama.</p><div class="tags"><span>Blender</span><span>Prop</span></div></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- GAMES -->
+  <section id="games" class="tab-content" aria-label="Game mini">
+    <div class="sec-head reveal">
+      <h1>Game mini choi bang chip ao</h1>
+      <p>Chip luu trong trinh duyet cua ban, khong phai tien that. Chien thang de luyen xac suat.</p>
+    </div>
+    <div class="chip-display reveal">
+      <span class="material-icons-sharp">toll</span>
+      <span id="chipBalance">1000</span><span>chips</span>
+      <button id="resetChips" class="mini-btn">Reset chip</button>
+    </div>
+    <div class="game-switch reveal">
+      <button class="game-tab-btn active" data-game="blackjack">Blackjack</button>
+      <button class="game-tab-btn" data-game="poker">Texas Holdem</button>
+    </div>
+    <div class="game-panel active-panel" id="blackjackPanel">
+      <div class="bj-table reveal">
+        <div class="bj-row">
+          <h3>Dealer <span class="score-badge" id="dealerScore">0</span></h3>
+          <div class="card-row" id="dealerCards"></div>
+        </div>
+        <div class="bj-row">
+          <h3>Ban <span class="score-badge" id="playerScore">0</span></h3>
+          <div class="card-row" id="playerCards"></div>
+        </div>
+      </div>
+      <p class="game-status" id="bjStatus">Dat cuoc roi bam Chia bai de bat dau.</p>
+      <div class="game-controls reveal">
+        <div class="bet-controls">
+          <label for="bjBet">Cuoc</label>
+          <input type="number" id="bjBet" value="50" min="10" step="10">
+          <button id="bjDeal" class="game-btn primary">Chia bai</button>
+        </div>
+        <div class="action-controls">
+          <button id="bjHit" class="game-btn" disabled>Rut</button>
+          <button id="bjStand" class="game-btn" disabled>Dung</button>
+          <button id="bjDouble" class="game-btn" disabled>Gap doi</button>
+        </div>
+      </div>
+    </div>
+    <div class="game-panel" id="pokerPanel">
+      <div class="holdem-table reveal">
+        <div class="holdem-row">
+          <h3>Bot <span class="score-badge" id="botChipsDisplay">1000</span></h3>
+          <div class="card-row" id="botCards"></div>
+        </div>
+        <div class="holdem-row">
+          <h3>Bai chung <span class="score-badge" id="potDisplay">Pot: 0</span></h3>
+          <div class="card-row" id="communityCards"></div>
+        </div>
+        <div class="holdem-row">
+          <h3>Ban</h3>
+          <div class="card-row" id="playerHoldemCards"></div>
+        </div>
+      </div>
+      <p class="game-status" id="holdemStatus">Dat ante roi bam Chia bai de bat dau van moi.</p>
+      <div class="game-controls reveal">
+        <div class="bet-controls">
+          <label for="holdemAnte">Ante</label>
+          <input type="number" id="holdemAnte" value="20" min="10" step="10">
+          <button id="holdemStart" class="game-btn primary">Chia bai</button>
+        </div>
+        <div class="action-controls">
+          <button id="holdemCheckCall" class="game-btn" disabled>Check</button>
+          <input type="number" id="holdemAmount" value="20" min="10" step="10" disabled>
+          <button id="holdemBetRaise" class="game-btn" disabled>Bet</button>
+          <button id="holdemFold" class="game-btn" disabled>Bo</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CODING -->
+  <section id="coding" class="tab-content" aria-label="Ky thuat backend">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Coding / Backend</span>
+      <h1>Handler sach, data ben, debug co he thong</h1>
+      <p>Mot Remote duy nhat dieu phoi. Data co khoa session va hang doi retry. Loi duoc log co id de trace lai trong 1 phut.</p>
+    </div>
+
+    <div class="coding-stats">
+      <div class="stat-box reveal"><span class="material-icons-sharp">dns</span><strong>1</strong><p>Remote dispatcher cho shop, quest, save</p></div>
+      <div class="stat-box reveal"><span class="material-icons-sharp">speed</span><strong>&lt;80ms</strong><p>p95 handler do tren may that</p></div>
+      <div class="stat-box reveal"><span class="material-icons-sharp">save</span><strong>0</strong><p>Vụ mat data sau khi gan session lock</p></div>
+      <div class="stat-box reveal"><span class="material-icons-sharp">inventory_2</span><strong>6</strong><p>Package rieng tai dung qua 3 game</p></div>
+    </div>
+
+    <div class="split">
+      <div class="panel reveal">
+        <h3><span class="material-icons-sharp" style="vertical-align:-5px;color:var(--accent)">hub</span> Handler registry</h3>
+        <p>Client chi goi ten lenh. Server validate, rate-limit roi moi chay logic. Them chuc nang khong sua file cu.</p>
+        <div class="code-window">
+          <div class="code-head"><span></span><span></span><span></span><b>Server/HandlerRegistry.lua</b><button class="mini-btn copy-btn" data-copy="handler">Copy</button></div>
+<pre id="code-handler"><code><span class="k">local</span> Handlers = {}
+<span class="k">local</span> Cooldown = {} <span class="c">-- [userId..name] = tick</span>
+
+<span class="k">function</span> Handlers.register(name, cooldown, fn)
+  Handlers[name] = <span class="k">function</span>(player, ...)
+    <span class="k">local</span> key = player.UserId .. name
+    <span class="k">if</span> tick() - (Cooldown[key] <span class="k">or</span> 0) &lt; cooldown <span class="k">then return</span> <span class="k">nil</span> <span class="k">end</span>
+    Cooldown[key] = tick()
+    <span class="k">local</span> ok, err = pcall(fn, player, ...)
+    <span class="k">if not</span> ok <span class="k">then</span> Logger.warn(name, player.UserId, err) <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></code></pre>
+        </div>
+        <div class="tags"><span>Single Remote</span><span>pcall isolate</span><span>Rate-limit 0.4s</span></div>
+      </div>
+
+      <div class="panel reveal">
+        <h3><span class="material-icons-sharp" style="vertical-align:-5px;color:var(--accent)">database</span> Kho du lieu</h3>
+        <p>Session lock chong ghi de khi player nhay server. Ghi loi vao queue, retry theo cap so nhan.</p>
+        <div class="code-window">
+          <div class="code-head"><span></span><span></span><span></span><b>Server/DataStore.lua</b><button class="mini-btn copy-btn" data-copy="data">Copy</button></div>
+<pre id="code-data"><code>Store:UpdateAsync(key, <span class="k">function</span>(old)
+  old = old <span class="k">or</span> Defaults.new()
+  <span class="k">if</span> old._lock ~= jobId <span class="k">then return nil end</span>
+  old.coins += delta
+  old._v += 1 <span class="c">-- migrate khi doi schema</span>
+  <span class="k">return</span> old
+<span class="k">end</span>)</code></pre>
+        </div>
+        <div class="tags"><span>ProfileStore fork</span><span>Autosave 60s</span><span>Retry 1s / 2s / 4s</span></div>
+      </div>
+    </div>
+
+    <div class="split" style="margin-top:1rem">
+      <div class="panel reveal">
+        <h3><span class="material-icons-sharp" style="vertical-align:-5px;color:var(--accent)">bug_report</span> Debug theo quy trinh</h3>
+        <ul class="tut-list">
+          <li><span class="material-icons-sharp">search</span><div><b>Tai hien bang id log</b><p>Moi warn kem traceId, tim lai trong file log 1 dong.</p></div></li>
+          <li><span class="material-icons-sharp">memory</span><div><b>Profiler truoc, doan sau</b><p>MicroProfiler + Mem tag. Fix spike roi moi toi uu code.</p></div></li>
+          <li><span class="material-icons-sharp">science</span><div><b>Test truoc khi merge</b><p>TestEZ cho thuat toan inventory, sort, path. Fail thi khong merge.</p></div></li>
+        </ul>
+        <div class="term-log"><span class="t-dim">[12:04:31]</span> <span class="t-ok">OK</span> Shop.Buy p95=62ms n=412<br><span class="t-dim">[12:04:32]</span> <span class="t-warn">WARN #a3f1</span> Save retry 1/3 key=Player_88<br><span class="t-dim">[12:04:34]</span> <span class="t-ok">OK</span> flush queue, 0 pending</div>
+      </div>
+
+      <div class="panel reveal">
+        <h3><span class="material-icons-sharp" style="vertical-align:-5px;color:var(--accent)">deployed_code</span> Thuat toan + package rieng</h3>
+        <p>Khong viet lai thu da co. Dung thu vien chuan, goi trong package rieng de 3 game cung dung.</p>
+        <div class="pkg-grid">
+          <div><b>Net</b><p>Packet, queue, retry gui Remote</p></div>
+          <div><b>DataKit</b><p>Defaults, migrate v1-v4, lock</p></div>
+          <div><b>Logger</b><p>Warn/error kem traceId</p></div>
+          <div><b>InvAlgo</b><p>Stack, sort O(n log n), search O(1)</p></div>
+          <div><b>Promise</b><p>Thay spawn/wait roi rac</p></div>
+          <div><b>Config</b><p>Constant 1 cho, doi khong so loi</p></div>
+        </div>
+        <div class="tags"><span>Wally / Pesde</span><span>Stylua + Selene</span><span>Semver rieng</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATUS -->
+  <section id="status" class="tab-content" aria-label="Trang thai">
+    <div class="sec-head reveal">
+      <h1>Dang nghi nhung tay van quen phim</h1>
+      <p>1 nam kinh nghiem, nghi 1.5 nam. Van giu skill, chi can mot ly do du tot de quay lai.</p>
+    </div>
+    <div class="status-hero reveal">
+      <img src="../img/avatar1.jpg?v=2" alt="Anh dai dien cua Fexxwer" loading="lazy">
+      <div><h2>Coder dang ngu dong</h2><p>20 du an da xong. Hien mo commission nhe de lam nong tay lai.</p></div>
+    </div>
+    <div class="status-stats">
+      <div class="stat-box reveal"><span class="material-icons-sharp">code</span><strong>1+</strong><p>Nam kinh nghiem</p></div>
+      <div class="stat-box reveal"><span class="material-icons-sharp">bedtime</span><strong>1.5</strong><p>Nam da nghi</p></div>
+      <div class="stat-box reveal"><span class="material-icons-sharp">inventory_2</span><strong>20+</strong><p>Du an hoan thanh</p></div>
+      <div class="stat-box reveal"><span class="material-icons-sharp">local_fire_department</span><strong>0</strong><p>Commit thang nay</p></div>
+    </div>
+    <div class="status-charts">
+      <div class="chart-card reveal"><h3>Ky nang giu duoc</h3><canvas id="skillRadar" height="220"></canvas></div>
+      <div class="chart-card reveal"><h3>Hoat dong 18 thang qua</h3><canvas id="activityLine" height="220"></canvas></div>
+      <div class="chart-card reveal"><h3>Mot ngay tron danh cho</h3><canvas id="timeDoughnut" height="220"></canvas></div>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<footer>
+  <div class="foot">
+    <span>Fexxwer TheDev <span id="year">2026</span>. Code tay, khong dung template.</span>
+    <nav aria-label="Lien ket phu"><a href="#shop" data-nav>Shop</a><a href="#projects" data-nav>Projects</a><a href="mailto:nhantk123vip@gmail.com">Email</a><a href="#">Dieu khoan</a><a href="#">Bao mat</a></nav>
+    <button class="to-top" id="toTop">Len dau trang</button>
+  </div>
+</footer>
+
+<div class="mobilebar" id="mobilebar">
+  <nav aria-label="Dieu huong di dong">
+    <a href="#home" data-nav class="active"><span class="material-icons-sharp">home</span>Home</a>
+    <a href="#shop" data-nav><span class="material-icons-sharp">shopping_cart</span>Shop</a>
+    <a href="#projects" data-nav><span class="material-icons-sharp">work</span>Jobs</a>
+    <a href="#models" data-nav><span class="material-icons-sharp">view_in_ar</span>3D</a>
+    <a href="#games" data-nav><span class="material-icons-sharp">casino</span>Game</a>
+    <a href="#coding" data-nav><span class="material-icons-sharp">terminal</span>Code</a>
+    <a href="#status" data-nav><span class="material-icons-sharp">inventory</span>Status</a>
+  </nav>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="../js/index.js"></script>
+</body>
+</html>

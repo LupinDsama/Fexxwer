@@ -36,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
       else a.removeAttribute("aria-current");
     });
     if (id === "status") initStatusCharts();
-    if (id === "trading") initTradingCharts();
     const sec = document.getElementById(id);
     if (sec) observeReveals(sec);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -161,46 +160,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  /* TRADING charts via Binance, fallback mock. */
-  let tradingDone = false;
-  async function fetchKlines(symbol) {
-    const res = await fetch("https://api.binance.com/api/v3/klines?symbol=" + symbol + "&interval=1h&limit=48");
-    if (!res.ok) throw new Error("api");
-    const raw = await res.json();
-    return raw.map((k) => parseFloat(k[4]));
-  }
-  function mock(seed) {
-    let p = seed; const out = [];
-    for (let i = 0; i < 48; i++) { p += (Math.random() - 0.5) * seed * 0.012; out.push(p); }
-    return out;
-  }
-  async function renderCard(card) {
-    const symbol = card.dataset.symbol;
-    const canvas = card.querySelector("canvas");
-    const vEl = card.querySelector(".tp-value");
-    const cEl = card.querySelector(".tp-change");
-    const seeds = { BTCUSDT: 67000, BNBUSDT: 590, SOLUSDT: 145 };
-    let closes;
-    try { closes = await fetchKlines(symbol); }
-    catch (_) { closes = mock(seeds[symbol] || 100); }
-    const first = closes[0], last = closes[closes.length - 1];
-    const pct = ((last - first) / first) * 100;
-    const up = pct >= 0;
-    vEl.textContent = last >= 1000 ? Math.round(last).toLocaleString("en-US") : last.toFixed(2);
-    cEl.textContent = (up ? "▲ " : "▼ ") + Math.abs(pct).toFixed(2) + "% (48h)";
-    cEl.classList.add(up ? "up" : "down");
-    card.querySelector(".skeleton")?.remove();
-    new Chart(canvas, {
-      type: "line",
-      data: { labels: closes.map((_, i) => i), datasets: [{ data: closes, borderColor: up ? "#177b57" : "#d43a2f", backgroundColor: up ? "rgba(23,123,87,.12)" : "rgba(212,58,47,.12)", fill: true, tension: 0.3, pointRadius: 0, borderWidth: 2 }] },
-      options: { responsive: true, scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false }, tooltip: { enabled: true } } }
+  /* Coding tab: copy code sample. No-op if section absent. */
+  document.querySelectorAll(".copy-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const pre = document.getElementById("code-" + btn.dataset.copy);
+      const text = pre ? pre.innerText : "";
+      try { await navigator.clipboard.writeText(text); }
+      catch (_) {
+        const ta = document.createElement("textarea");
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); } catch (_) {}
+        ta.remove();
+      }
+      const old = btn.textContent;
+      btn.textContent = "Copied";
+      setTimeout(() => { btn.textContent = old; }, 1200);
     });
-  }
-  function initTradingCharts() {
-    if (tradingDone || typeof Chart === "undefined") return;
-    tradingDone = true;
-    document.querySelectorAll(".trading-card").forEach(renderCard);
-  }
+  });
 
   /* Game zone: chips, blackjack, holdem. No-op if section absent. */
   try { initGameZone(); } catch (_) {}
